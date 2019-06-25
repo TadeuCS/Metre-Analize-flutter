@@ -41,8 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: const Text('Metre Analize'),
           backgroundColor: Colors.deepOrangeAccent,
+          title: const Text('Metre Analize'),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.filter_list),

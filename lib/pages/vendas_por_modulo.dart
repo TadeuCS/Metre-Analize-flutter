@@ -1,0 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_app/widgets/card_venda_bruta.dart';
+
+class VendasPorModulo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        VendaBruta(),
+        Container(color: Colors.blue,),
+      ],
+    );
+  }
+}

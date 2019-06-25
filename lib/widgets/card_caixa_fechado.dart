@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/detalhamento_venda_bruta.dart';
+import 'package:flutter_app/pages/venda_bruta_page.dart';
 import 'package:flutter_app/pojos/VendaBruta.dart';
+import 'package:flutter_app/widgets/button_default.dart';
 import 'package:flutter_app/widgets/card_item_description.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
 
@@ -105,16 +106,7 @@ class CardCaixaFechado extends StatelessWidget {
                   TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               decorationValue:
                   TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600)),
-          SizedBox(
-            width: double.infinity,
-            child: RaisedButton(
-                color: Colors.deepOrangeAccent,
-                textColor: Colors.white,
-                child: Text(
-                  "Detalhar Venda Bruta",
-                ),
-                onPressed: _detalharVendaBruta),
-          )
+          ButtomDefault("Detalhar Venda Bruta", _detalharVendaBruta)
         ]),
       ),
     );

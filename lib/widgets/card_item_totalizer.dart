@@ -6,7 +6,7 @@ class CardItemTotalizer extends StatelessWidget {
   final double valor;
   final TextStyle decorationTitle;
   final TextStyle decorationValue;
-  final IconData icone;
+  final Icon icone;
 
   final TextStyle defaultTextStyle = const TextStyle(fontSize: 15.0);
 
@@ -29,7 +29,7 @@ class CardItemTotalizer extends StatelessWidget {
 
     Widget _widgetContruct() {
       if (icone != null)
-        return Icon(icone);
+        return icone;
       else
         return Text(
           _formataValor(),
