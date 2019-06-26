@@ -36,7 +36,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: const TextStyle(
                             color: Colors.black54, fontSize: 25.0),
                       ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
                       Image(
+                        height: 120.0,
                         image: NetworkImage(
                             "http://metre.ddns.net/MetreGestao/javax.faces.resource/logo.png.xhtml?ln=img"),
                       ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:flutter_app/pages/home_page.dart';
-import 'package:flutter_app/pages/caixas_page.dart';
+import 'package:flutter_app/widgets/tab_home.dart';
+import 'package:flutter_app/widgets/tab_caixas.dart';
 import 'package:flutter_app/widgets/dialog_filtro.dart';
 
 class HomeScreen extends StatefulWidget {

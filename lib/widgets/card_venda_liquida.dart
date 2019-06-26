@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
 
-class VendaBruta extends StatelessWidget {
+class VendaLiquida extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -11,11 +11,11 @@ class VendaBruta extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             CardItemTotalizer(
-                descricao: "Detalhamento da Venda Bruta",
+                descricao: "Detalhamento da Venda Liquida",
                 decorationTitle: TextStyle(
                     fontSize: 18.0, fontWeight: FontWeight.w600),
                 icone: const Icon(
-                  Icons.monetization_on,
+                  Icons.list,
                   color: Colors.deepOrangeAccent,
                   size: 30.0,
                 )),
@@ -26,27 +26,43 @@ class VendaBruta extends StatelessWidget {
               ),
             ),
             CardItemTotalizer(
-              descricao: "(+) Venda Bruta:",
-              valor: 1235.00,
-            ),
-            CardItemTotalizer(
-              descricao: "(-) Cancelamentos:",
+              descricao: "(+) Produtos:",
               valor: 0.00,
             ),
             CardItemTotalizer(
-              descricao: "(-) Estornos:",
+              descricao: "(+) Taxa Serviço:",
+              valor: 0.00,
+            ),
+            CardItemTotalizer(
+              descricao: "(+) Taxa Entrega:",
+              valor: 0.00,
+            ),
+            CardItemTotalizer(
+              descricao: "(+) Acréscimos:",
+              valor: 0.00,
+            ),
+            CardItemTotalizer(
+              descricao: "(-) Descontos:",
+              valor: 0.00,
+            ),
+            CardItemTotalizer(
+              descricao: "(-) Descontos Promocionais:",
+              valor: 0.00,
+            ),
+            CardItemTotalizer(
+              descricao: "(-) Descontos por Cliente:",
               valor: 0.00,
             ),
             Divider(
               color: Colors.grey,
             ),
             CardItemTotalizer(
-              descricao: "(=) Venda Liquida:",
+              descricao: "(=) Total:",
               valor: 1235.0,
               decorationTitle: TextStyle(
-                  fontSize: 18.0, fontWeight: FontWeight.w600),
+                  fontSize: 15.0, fontWeight: FontWeight.w600),
               decorationValue: TextStyle(
-                  fontSize: 18.0, fontWeight: FontWeight.w600),
+                  fontSize: 15.0, fontWeight: FontWeight.w600),
             ),
           ],
         ),

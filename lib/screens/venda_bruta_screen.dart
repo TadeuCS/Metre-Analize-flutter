@@ -7,18 +7,14 @@ import 'package:flutter_app/pages/vendas_por_modulo.dart';
 import 'package:flutter_app/pages/vendas_por_produtos.dart';
 import 'package:flutter_app/pages/vendas_por_subgrupos.dart';
 
-class DetalhamentoVendaBruta extends StatefulWidget {
-  VendaBruta totalizador;
+class DetalhamentoVendaBruta extends StatelessWidget {
+
+  final VendaBruta totalizador;
 
   DetalhamentoVendaBruta(this.totalizador);
 
-  @override
-  _DetalhamentoVendaBrutaState createState() => _DetalhamentoVendaBrutaState();
-}
-
-class _DetalhamentoVendaBrutaState extends State<DetalhamentoVendaBruta> {
-  int _paginaSelecionada = 0;
   PageController _pageController = PageController();
+  int _paginaSelecionada = 0;
 
   _showBottomSheep(BuildContext context) {
     showModalBottomSheet(
@@ -29,8 +25,8 @@ class _DetalhamentoVendaBrutaState extends State<DetalhamentoVendaBruta> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _createTile(context, "Vendas por Atendente", Icons.expand_more, 0),
-              _createTile(context, "Vendas por Formas", Icons.expand_more, 1),
+              _createTile(context, "Vendas por Formas", Icons.expand_more, 0),
+              _createTile(context, "Vendas por Atendente", Icons.expand_more, 1),
               _createTile(context, "Vendas por Módulos", Icons.expand_more, 2),
               _createTile(context, "Vendas por Produtos", Icons.expand_more, 3),
               _createTile(context, "Vendas por Grupos", Icons.expand_more, 4),
@@ -67,7 +63,7 @@ class _DetalhamentoVendaBrutaState extends State<DetalhamentoVendaBruta> {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Colors.deepOrangeAccent,
-          title: Text("Detalhamento de Caixa"),
+          title: Text("Detalhamento do Caixa"),
         ),
         body: Container(
           padding: const EdgeInsets.all(10.0),
@@ -75,8 +71,8 @@ class _DetalhamentoVendaBrutaState extends State<DetalhamentoVendaBruta> {
             controller: _pageController,
             physics: NeverScrollableScrollPhysics(),
             children: <Widget>[
-              VendasPorAtendente(),
               VendasPorForma(),
+              VendasPorAtendente(),
               VendasPorModulo(),
               VendasPorProdutos(),
               VendasPorGrupos(),

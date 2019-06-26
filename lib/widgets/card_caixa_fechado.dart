@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/venda_bruta_page.dart';
+import 'package:flutter_app/screens/venda_bruta_screen.dart';
 import 'package:flutter_app/pojos/VendaBruta.dart';
 import 'package:flutter_app/widgets/button_default.dart';
 import 'package:flutter_app/widgets/card_item_description.dart';
