@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pojos/VendaBruta.dart';
 import 'package:flutter_app/pages/vendas_por_atendente.dart';
 import 'package:flutter_app/pages/vendas_por_formas.dart';
 import 'package:flutter_app/pages/vendas_por_grupos.dart';
@@ -9,10 +8,6 @@ import 'package:flutter_app/pages/vendas_por_subgrupos.dart';
 
 class DetalhamentoVendaBruta extends StatelessWidget {
 
-  final VendaBruta totalizador;
-
-  DetalhamentoVendaBruta(this.totalizador);
-
   PageController _pageController = PageController();
   int _paginaSelecionada = 0;
 
@@ -20,16 +15,18 @@ class DetalhamentoVendaBruta extends StatelessWidget {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              _createTile(context, "Vendas por Formas", Icons.expand_more, 0),
-              _createTile(context, "Vendas por Atendente", Icons.expand_more, 1),
-              _createTile(context, "Vendas por Módulos", Icons.expand_more, 2),
-              _createTile(context, "Vendas por Produtos", Icons.expand_more, 3),
-              _createTile(context, "Vendas por Grupos", Icons.expand_more, 4),
-              _createTile(context, "Vendas por Subgrupos", Icons.expand_more, 5),
-            ],
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(0),
+            child: Column(
+              children: <Widget>[
+                _createTile(context, "Vendas por Formas", Icons.expand_more, 0),
+                _createTile(context, "Vendas por Atendente", Icons.expand_more, 1),
+                _createTile(context, "Vendas por Módulos", Icons.expand_more, 2),
+                _createTile(context, "Vendas por Produtos", Icons.expand_more, 3),
+                _createTile(context, "Vendas por Grupos", Icons.expand_more, 4),
+                _createTile(context, "Vendas por Subgrupos", Icons.expand_more, 5),
+              ],
+            ),
           );
         }
     );

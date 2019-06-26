@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/venda_bruta_screen.dart';
-import 'package:flutter_app/pojos/VendaBruta.dart';
 import 'package:flutter_app/widgets/button_default.dart';
 import 'package:flutter_app/widgets/card_item_description.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
@@ -11,8 +10,7 @@ class CardCaixaFechado extends StatelessWidget {
   Widget build(BuildContext context) {
 
     void _detalharVendaBruta(){
-      VendaBruta totalizador = VendaBruta(100.0, 0.0, 0.0);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => DetalhamentoVendaBruta(totalizador)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => DetalhamentoVendaBruta()));
     }
 
     return Card(

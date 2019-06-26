@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/home_screen.dart';
+import 'package:flutter_app/screens/passwordRecuver_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -13,6 +14,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
 
+    void _recuperarSenha(){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => RecuperarSenha()));
+    }
     void _login(){
       Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
     }
@@ -41,8 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Image(
                         height: 120.0,
-                        image: NetworkImage(
-                            "http://metre.ddns.net/MetreGestao/javax.faces.resource/logo.png.xhtml?ln=img"),
+                          image: AssetImage("images/logo.png")
+//                        image: NetworkImage(
+//                            "http://metre.ddns.net/MetreGestao/javax.faces.resource/logo.png.xhtml?ln=img"),
                       ),
                       SizedBox(
                         height: 50.0,
@@ -79,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: <Widget>[
                       FlatButton(
                         padding: EdgeInsets.all(0),
-                        onPressed: () {},
+                        onPressed: _recuperarSenha,
                         child: Text(
                           "Esqueci a senha",
                           textAlign: TextAlign.right,
@@ -96,7 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 40.0,
                     child: RaisedButton(
                       onPressed: _login,
-                      color: Colors.deepOrange,
                       child: Text(
                         "Entrar",
                         style: TextStyle(color: Colors.white, fontSize: 18.0),
