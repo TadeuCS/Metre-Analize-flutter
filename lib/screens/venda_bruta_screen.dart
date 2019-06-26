@@ -22,8 +22,6 @@ class DetalhamentoVendaBruta extends StatelessWidget {
         builder: (BuildContext context) {
           return Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               _createTile(context, "Vendas por Formas", Icons.expand_more, 0),
               _createTile(context, "Vendas por Atendente", Icons.expand_more, 1),
@@ -37,12 +35,6 @@ class DetalhamentoVendaBruta extends StatelessWidget {
     );
   }
 
-  _animateToPage(BuildContext context,int page){
-    Navigator.pop(context);
-    _paginaSelecionada = page;
-    _pageController.animateToPage(_paginaSelecionada, duration: Duration(seconds: 1), curve: Curves.fastLinearToSlowEaseIn);
-  }
-
   ListTile _createTile(
       BuildContext context, String name, IconData icon, int page) {
     return ListTile(
@@ -54,6 +46,12 @@ class DetalhamentoVendaBruta extends StatelessWidget {
       onTap: (){_animateToPage(context, page);},
       onLongPress: (){_animateToPage(context, page);},
     );
+  }
+
+  _animateToPage(BuildContext context,int page){
+    Navigator.pop(context);
+    _paginaSelecionada = page;
+    _pageController.animateToPage(_paginaSelecionada, duration: Duration(seconds: 1), curve: Curves.fastLinearToSlowEaseIn);
   }
 
   @override
@@ -83,7 +81,7 @@ class DetalhamentoVendaBruta extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.deepOrangeAccent,
             child: Icon(Icons.assignment),
-            onPressed: () => _showBottomSheep(context)),
+            onPressed:  () =>  _showBottomSheep(context)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
           child: Container(

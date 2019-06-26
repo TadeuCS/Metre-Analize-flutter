@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/widgets/drawer_sideMenu.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter_app/widgets/tab_home.dart';
@@ -38,16 +39,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: SideMenu(),
         appBar: AppBar(
-          automaticallyImplyLeading: false,
+//          automaticallyImplyLeading: false,
           centerTitle: true,
           backgroundColor: Colors.deepOrangeAccent,
           title: const Text('Metre Analize'),
-          actions: <Widget>[
+          actions: _selectedIndex==0 ? []:
+          <Widget>[
             IconButton(
               icon: Icon(Icons.filter_list),
               onPressed: _openFilterModal,
-            ),
+            )
           ],
         ),
         body: _pagesSwap.elementAt(_selectedIndex),

@@ -5,6 +5,7 @@ class CardItemTotalizer extends StatelessWidget {
   final String descricao;
   final double valor;
   final double valorCenter;
+  final dynamic tipoColumnCenter;
   final TextStyle decorationTitle;
   final TextStyle decorationValue;
   final Icon icone;
@@ -14,6 +15,7 @@ class CardItemTotalizer extends StatelessWidget {
       {@required this.descricao,
       this.valor,
       this.valorCenter,
+      this.tipoColumnCenter,
       this.decorationTitle,
       this.decorationValue,
       this.icone});
@@ -52,6 +54,7 @@ class CardItemTotalizer extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: valorCenter==null?Text(""):
               Text(
+                tipoColumnCenter==int?valorCenter.toInt().toString():
                 _formataValor(valorCenter),
                 style: decorationValue == null
                     ? defaultTextStyle
