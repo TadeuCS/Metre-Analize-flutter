@@ -35,10 +35,3 @@ class Services{
   }
 
 }
-
-class Retorno{
-  String data;
-  String chave;
-
-  Retorno(this.data, this.chave);
-}

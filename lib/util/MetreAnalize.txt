@@ -1,0 +1,641 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package util;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.olivet.controller.CaixaEJB;
+import com.olivet.controller.UsuarioEJB;
+import com.olivet.model.Caixa;
+import com.olivet.model.FechamentoCaixa;
+import com.olivet.model.Usuario;
+import com.olivet.pojo.ws.TotalizadorAtendente;
+import com.olivet.pojo.ws.TotalizadorBalcao;
+import com.olivet.pojo.ws.TotalizadorCaixa;
+import com.olivet.pojo.ws.TotalizadorDelivery;
+import com.olivet.pojo.ws.TotalizadorForma;
+import com.olivet.pojo.ws.TotalizadorMesa;
+import com.olivet.pojo.ws.TotalizadorModulo;
+import com.olivet.pojo.ws.TotalizadorVendaLiquida;
+import com.olivet.pojo.ws.VendasPorGrupo;
+import com.olivet.pojo.ws.VendasPorHorario;
+import com.olivet.pojo.ws.VendasPorProduto;
+import com.olivet.pojo.ws.VendasPorSubGrupo;
+import com.olivet.util.OUtil;
+import com.olivet.util.TokenUtils;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
+//import org.apache.commons.codec.binary.Base64;
+
+/**
+ *
+ * @author renato
+ */
+@Path("analize")
+@RequestScoped
+public class MetreAnalizeService {
+
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    @EJB
+    UsuarioEJB usuarioEJB;
+    @EJB
+    CaixaEJB caixaEJB;
+
+    @Context
+    private UriInfo context;
+
+    public MetreAnalizeService() {
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("usuario/login/")
+    public Response login(@QueryParam("user") String usuario, @QueryParam("pass") String senha) {
+        try {
+            if (usuario == null || senha == null) {
+                return getResponse(Status.BAD_REQUEST, null);
+            }
+            Usuario user = usuarioEJB.login(usuario, senha);
+            if (user.getUsuario() != null && !user.getInativo()) {
+                JsonObject usuarioPojo = new JsonObject();
+                usuarioPojo.addProperty("user", user.getUsuario());
+                usuarioPojo.addProperty("mail", user.getEmail());
+                usuarioPojo.addProperty("name", user.getNome());
+                String auth_token = TokenUtils.geraToken(new Gson().toJson(usuarioPojo));
+                JsonObject objeto = new JsonObject();
+                objeto.addProperty("auth_token", auth_token);
+                return getResponse(Status.OK, new Gson().toJson(objeto));
+            } else {
+                return getResponse(Status.UNAUTHORIZED, null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("caixa/listar/turnos/")
+    public Response listarTurnos(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                List<String> turnos = caixaEJB.listarTurnos();
+                return getResponse(Status.OK, new Gson().toJson(turnos));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("caixa/listar/operadores/")
+    public Response listarOperadores(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                List<String> operadores = caixaEJB.listarOperadoresCaixa();
+                return getResponse(Status.OK, new Gson().toJson(operadores));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("caixa/listar/abertos/")
+    public Response listarCaixasAbertos(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                List<Caixa> abertos = caixaEJB.listarCaixasAbertosSemEmpresa();
+                List<TotalizadorCaixa> caixas = new ArrayList<>();
+                for (Caixa caixa : abertos) {
+                    Date dtAbertura = DATETIME_FORMAT.parse(OUtil.formataData(caixa.getDtCaixa(), "yyyy-MM-dd") + " " + OUtil.formataData(caixa.getHoraAbertura(), "HH:mm"));
+                    TotalizadorCaixa totCaixa = new TotalizadorCaixa(
+                            caixa.getIdCaixa(), caixa.getSituacao(),
+                            caixa.getIdUsuario().getUsuario(), caixa.getPeriodo(), dtAbertura,
+                            caixa.getTotalEntradas(), caixa.getTotalSaidas(), caixa.getSaldo());
+                    caixas.add(totCaixa);
+                }
+                return getResponse(Status.OK, new Gson().toJson(caixas));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("caixa/listar/encerrados/")
+    public Response listarCaixasEncerrados(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            Integer idUsuario = objeto.get("id_operador") == null ? null : objeto.get("id_operador").getAsInt();
+            String turno = objeto.get("turno") == null ? null : objeto.get("turno").getAsString();
+            Date dtUltCaixa = caixaEJB.getDateUltCaixa();
+            Date dtIni = dtUltCaixa;
+            Date dtFin = dtUltCaixa;
+            if (objeto.get("dt_ini") != null) {
+                dtIni = DATE_FORMAT.parse(objeto.get("dt_ini").getAsString());
+            }
+            if (objeto.get("dt_fin") != null) {
+                dtFin = DATE_FORMAT.parse(objeto.get("dt_fin").getAsString());
+            }
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                List<Caixa> fechados = caixaEJB.listarCaixasFechadosSemEmpresa(idUsuario, turno, dtIni, dtFin);
+                List<TotalizadorCaixa> caixas = new ArrayList<>();
+                for (Caixa caixa : fechados) {
+                    Date dtAbertura = DATETIME_FORMAT.parse(OUtil.formataData(caixa.getDtCaixa(), "yyyy-MM-dd") + " " + OUtil.formataData(caixa.getHoraAbertura(), "HH:mm"));
+                    List<TotalizadorForma> formas = new ArrayList<>();
+                    for (FechamentoCaixa fc : caixa.getFechamentoCaixaList()) {
+                        formas.add(new TotalizadorForma(fc.getFormaQuitacao(), fc.getValorInformado(), fc.getValorCalculado(), fc.getDiferenca()));
+                    }
+                    TotalizadorCaixa totCaixa = new TotalizadorCaixa(
+                            caixa.getIdCaixa(), caixa.getSituacao(),
+                            caixa.getIdUsuario().getUsuario(),
+                            caixa.getPeriodo(), dtAbertura,
+                            caixa.getDtFechamento(),
+                            caixa.getTrocoAbertura(),
+                            caixaEJB.trocosDeEntrada(caixa),
+                            caixaEJB.calcularRecebimentosVendas(caixa),
+                            caixaEJB.calcularTotalOutrosRecebimentos(caixa),
+                            caixaEJB.suprimentosSangriaPorCaixa(caixa, "Suprimento"),
+                            caixaEJB.suprimentosSangriaPorCaixa(caixa, "Sangria"),
+                            caixaEJB.suprimentosSangriaPorCaixa(caixa, "Estorno"),
+                            caixaEJB.suprimentosSangriaPorCaixa(caixa, "Cancelamento"),
+                            caixaEJB.suprimentosSangriaPorCaixa(caixa, "Pagamento"),
+                            caixaEJB.calcularTotalVales(caixa),
+                            caixaEJB.trocosDeSaida(caixa),
+                            caixa.getTotalEntradas(),
+                            caixa.getTotalSaidas(),
+                            caixa.getSaldo(),
+                            formas);
+                    caixas.add(totCaixa);
+                }
+                System.out.println(caixas);
+                return getResponse(Status.OK, new Gson().toJson(caixas));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("caixa/")
+    public Response getCaixaById(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            Integer idCaixa = objeto.get("id_caixa").getAsInt();
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                Caixa caixa = caixaEJB.SelecionarPorID(idCaixa);
+                if (caixa == null) {
+                    return getResponse(Status.NO_CONTENT, null);
+                } else {
+                    Date dtAbertura = DATETIME_FORMAT.parse(OUtil.formataData(caixa.getDtCaixa(), "yyyy-MM-dd") + " " + OUtil.formataData(caixa.getHoraAbertura(), "HH:mm"));
+                    List<TotalizadorForma> formas = new ArrayList<>();
+                    for (FechamentoCaixa fc : caixa.getFechamentoCaixaList()) {
+                        formas.add(new TotalizadorForma(fc.getFormaQuitacao(), fc.getValorInformado(), fc.getValorCalculado(), fc.getDiferenca()));
+                    }
+                    TotalizadorCaixa totCaixa = new TotalizadorCaixa(
+                            caixa.getIdCaixa(), caixa.getSituacao(),
+                            caixa.getIdUsuario().getUsuario(),
+                            caixa.getPeriodo(), dtAbertura,
+                            caixa.getDtFechamento(),
+                            caixa.getTrocoAbertura(),
+                            caixaEJB.trocosDeEntrada(caixa),
+                            caixaEJB.calcularRecebimentosVendas(caixa),
+                            caixaEJB.calcularTotalOutrosRecebimentos(caixa),
+                            caixaEJB.suprimentosSangriaPorCaixa(caixa, "Suprimento"),
+                            caixaEJB.suprimentosSangriaPorCaixa(caixa, "Sangria"),
+                            caixaEJB.suprimentosSangriaPorCaixa(caixa, "Estorno"),
+                            caixaEJB.suprimentosSangriaPorCaixa(caixa, "Cancelamento"),
+                            caixaEJB.suprimentosSangriaPorCaixa(caixa, "Pagamento"),
+                            caixaEJB.calcularTotalVales(caixa),
+                            caixaEJB.trocosDeSaida(caixa),
+                            caixa.getTotalEntradas(),
+                            caixa.getTotalSaidas(),
+                            caixa.getSaldo(),
+                            formas);
+                    return getResponse(Status.OK, new Gson().toJson(totCaixa));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("vendas/formas/")
+    public Response listarVendasPorForma(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            Integer idCaixa = objeto.get("id_caixa").getAsInt();
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                Caixa caixa = caixaEJB.SelecionarPorID(idCaixa);
+                if (caixa == null) {
+                    return getResponse(Status.NO_CONTENT, null);
+                } else {
+                    List<TotalizadorForma> formas = caixaEJB.vendasNoCaixaPorForma(caixa);
+                    return getResponse(Status.OK, new Gson().toJson(formas));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("vendas/modulos/")
+    public Response listarVendasPorModulos(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            Integer idCaixa = objeto.get("id_caixa").getAsInt();
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                Caixa caixa = caixaEJB.SelecionarPorID(idCaixa);
+                if (caixa == null) {
+                    return getResponse(Status.NO_CONTENT, null);
+                } else {
+                    TotalizadorBalcao totBalcao = caixaEJB.getTotalVendasBalcao(caixa);
+                    TotalizadorMesa totalizadorMesa = caixaEJB.getTotalVendasMesa(caixa);
+                    TotalizadorDelivery totalizadorDelivery = caixaEJB.getTotalVendasDelivery(caixa);
+                    TotalizadorModulo modulos = new TotalizadorModulo(totalizadorMesa, totBalcao, totalizadorDelivery);
+                    return getResponse(Status.OK, new Gson().toJson(modulos));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("vendas/liquida/")
+    public Response listarVendasLiquida(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            Integer idCaixa = objeto.get("id_caixa").getAsInt();
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                Caixa caixa = caixaEJB.SelecionarPorID(idCaixa);
+                if (caixa == null) {
+                    return getResponse(Status.NO_CONTENT, null);
+                } else {
+                    TotalizadorVendaLiquida vendaLiquida = caixaEJB.getTotalVendasLiquidas(caixa);
+                    return getResponse(Status.OK, new Gson().toJson(vendaLiquida));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("vendas/atendentes/")
+    public Response listarVendasPorAtendentes(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            Integer idCaixa = objeto.get("id_caixa").getAsInt();
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                Caixa caixa = caixaEJB.SelecionarPorID(idCaixa);
+                if (caixa == null) {
+                    return getResponse(Status.NO_CONTENT, null);
+                } else {
+                    List<TotalizadorAtendente> atendentes = caixaEJB.getTotalVendasAtendente(caixa);
+                    return getResponse(Status.OK, new Gson().toJson(atendentes));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("vendas/produtos/")
+    public Response listarVendasPorProdutos(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            Integer idCaixa = objeto.get("id_caixa").getAsInt();
+            Integer posIni = 0;
+            Integer qtdeLimit = 10;
+            if (objeto.get("pos_ini") != null) {
+                posIni = objeto.get("pos_ini").getAsInt();
+            }
+            if (objeto.get("qtde_limit") != null) {
+                qtdeLimit = objeto.get("qtde_limit").getAsInt();
+            }
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                Caixa caixa = caixaEJB.SelecionarPorID(idCaixa);
+                if (caixa == null) {
+                    return getResponse(Status.NO_CONTENT, null);
+                } else {
+                    List<VendasPorProduto> produtos = caixaEJB.getProdutosVendidos(caixa, posIni, qtdeLimit);
+                    return getResponse(Status.OK, new Gson().toJson(produtos));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("vendas/grupos/")
+    public Response listarVendasPorGrupos(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            Integer idCaixa = objeto.get("id_caixa").getAsInt();
+            Integer posIni = 0;
+            Integer qtdeLimit = 10;
+            if (objeto.get("pos_ini") != null) {
+                posIni = objeto.get("pos_ini").getAsInt();
+            }
+            if (objeto.get("qtde_limit") != null) {
+                qtdeLimit = objeto.get("qtde_limit").getAsInt();
+            }
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                Caixa caixa = caixaEJB.SelecionarPorID(idCaixa);
+                if (caixa == null) {
+                    return getResponse(Status.NO_CONTENT, null);
+                } else {
+                    List<VendasPorGrupo> grupos = caixaEJB.getGruposVendidos(caixa, posIni, qtdeLimit);
+                    return getResponse(Status.OK, new Gson().toJson(grupos));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("vendas/subgrupos/")
+    public Response listarVendasPorSubGrupos(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            Integer idCaixa = objeto.get("id_caixa").getAsInt();
+            Integer posIni = 0;
+            Integer qtdeLimit = 10;
+            if (objeto.get("pos_ini") != null) {
+                posIni = objeto.get("pos_ini").getAsInt();
+            }
+            if (objeto.get("qtde_limit") != null) {
+                qtdeLimit = objeto.get("qtde_limit").getAsInt();
+            }
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                Caixa caixa = caixaEJB.SelecionarPorID(idCaixa);
+                if (caixa == null) {
+                    return getResponse(Status.NO_CONTENT, null);
+                } else {
+                    List<VendasPorSubGrupo> subgrupo = caixaEJB.getSubGruposVendidos(caixa, posIni, qtdeLimit);
+                    return getResponse(Status.OK, new Gson().toJson(subgrupo));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("vendas/horarios/")
+    public Response listarVendasPorHorarios(String texto) {
+        JsonObject objeto = new JsonObject();
+        try {
+            System.out.println("Parameters: " + texto);
+            objeto = new Gson().fromJson(texto, objeto.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.UNSUPPORTED_MEDIA_TYPE, null);
+        }
+        try {
+            String auth_token = objeto.get("auth_token").getAsString();
+            Integer idCaixa = objeto.get("id_caixa").getAsInt();
+            if (auth_token == null || auth_token.trim().isEmpty()) {
+                return getResponse(Status.PAYMENT_REQUIRED, null);
+            } else if (!TokenUtils.validaToken(auth_token)) {
+                return getResponse(Status.UNAUTHORIZED, null);
+            } else {
+                Caixa caixa = caixaEJB.SelecionarPorID(idCaixa);
+                if (caixa == null) {
+                    return getResponse(Status.NO_CONTENT, null);
+                } else {
+                    List<VendasPorHorario> vendas = caixaEJB.getVendasPorHora(caixa);
+                    return getResponse(Status.OK, new Gson().toJson(vendas));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getResponse(Status.NOT_FOUND, null);
+        }
+    }
+
+    private Response getResponse(Status status, String textJson) {
+        if (textJson == null) {
+            textJson = new Gson().toJson("ERROR " + status.name());
+        }
+        return Response.status(status)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "POST, GET, PUT, UPDATE, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
+                .entity(textJson).build();
+    }
+}
+
