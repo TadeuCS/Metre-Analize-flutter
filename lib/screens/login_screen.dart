@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/home_screen.dart';
 import 'package:flutter_app/screens/passwordRecuver_screen.dart';
+import 'package:flutter_app/util/services.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -9,16 +10,25 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  Services services = new Services();
   TextEditingController usuarioController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
+
+  _LoginScreenState(){
+    services.getStatus();
+    _testMethodAssync();
+  }
+
+  _testMethodAssync() async{
+    var chave = await services.getChave("08751442000181");
+    print("Chave Retornada: $chave");
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    void _recuperarSenha(){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => RecuperarSenha()));
-    }
-    void _login(){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    _goToPage(Widget novaPage){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => novaPage));
     }
 
     return new Scaffold(
@@ -84,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: <Widget>[
                       FlatButton(
                         padding: EdgeInsets.all(0),
-                        onPressed: _recuperarSenha,
+                        onPressed: ()=>_goToPage(RecuperarSenhaScreen()),
                         child: Text(
                           "Esqueci a senha",
                           textAlign: TextAlign.right,
@@ -100,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
                     height: 40.0,
                     child: RaisedButton(
-                      onPressed: _login,
+                      onPressed: ()=>_goToPage(HomeScreen()),
                       child: Text(
                         "Entrar",
                         style: TextStyle(color: Colors.white, fontSize: 18.0),

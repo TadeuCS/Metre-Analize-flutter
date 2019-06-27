@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class RecuperarSenha extends StatefulWidget {
+class RecuperarSenhaScreen extends StatefulWidget {
   @override
-  _RecuperarSenhaState createState() => _RecuperarSenhaState();
+  _RecuperarSenhaScreenState createState() => _RecuperarSenhaScreenState();
 }
 
-class _RecuperarSenhaState extends State<RecuperarSenha> {
+class _RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scarffoldKey = GlobalKey();

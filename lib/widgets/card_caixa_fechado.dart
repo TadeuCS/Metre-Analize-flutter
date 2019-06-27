@@ -5,7 +5,6 @@ import 'package:flutter_app/widgets/card_item_description.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
 
 class CardCaixaFechado extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
 
