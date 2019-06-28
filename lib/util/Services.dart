@@ -15,7 +15,7 @@ class Services{
 
   final DateFormat _DATE_FORMAT = DateFormat('yyyy-MM-dd');
   final DateFormat _DATETIME_FORMAT = DateFormat('yyyy-MM-dd HH:mm');
-  final _url = "http://metre.ddns.net/MetreGestao/webresources/WS/";
+  final _url = "http://metre.ddns.net/services/analize/";
   String _token="";
   String _path="";
 
@@ -30,9 +30,9 @@ class Services{
   }
 
   //faz login e retorna a key de autenticação da API
-  Future<String> getToken(String email, String senha) async{
+  Future<String> getToken(String usuario, String senha) async{
     _path="usuario/login/";
-    var response = await http.get('$_url$_path?user=$email&pass=$senha');
+    var response = await http.get('$_url$_path?user=$usuario&pass=$senha');
     if(response.statusCode==200){
       _token= convert.jsonDecode(response.body)["auth_token"];
       return _token;

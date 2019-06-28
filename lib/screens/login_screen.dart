@@ -10,6 +10,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scarffoldKey = GlobalKey();
 
   TextEditingController usuarioController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
@@ -27,7 +28,25 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.push(context, MaterialPageRoute(builder: (context) => novaPage));
     }
 
+    _login() async{
+      String token = await services.getToken(usuarioController.text, senhaController.text);
+      if(token!=null){
+        print(token);
+        _goToPage(HomeScreen());
+      }else{
+        _scarffoldKey.currentState.showSnackBar(SnackBar(
+            backgroundColor: Color.fromRGBO(247, 118, 118, 1),
+            duration: Duration(seconds: 2),
+            content: Text('Usuário inválido ou acesso negado!'))
+        );
+        await Future.delayed(
+            Duration(seconds: 2)
+        );
+      }
+    }
+
     return new Scaffold(
+        key: _scarffoldKey,
         body: SingleChildScrollView(
             padding: const EdgeInsets.all(15.0),
             child: Form(
@@ -60,14 +79,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       TextFormField(
                         controller: usuarioController,
-                        keyboardType: TextInputType.emailAddress,
+                        keyboardType: TextInputType.text,
                         autofocus: true,
                         decoration: InputDecoration(
-                          labelText: "E-mail",
+                          labelText: "Usuário",
                         ),
                         validator: (text) {
                           if (text.isEmpty) {
-                            return "Informe o Email!";
+                            return "Informe o Usuário!";
                           }
                         },
                       ),
@@ -106,7 +125,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
                     height: 40.0,
                     child: RaisedButton(
-                      onPressed: ()=>_goToPage(HomeScreen()),
+                      onPressed: (){
+                        if(_formKey.currentState.validate()){
+                          return _login();
+                        }
+                        return null;
+                      },
                       child: Text(
                         "Entrar",
                         style: TextStyle(color: Colors.white, fontSize: 18.0),

@@ -8,7 +8,7 @@ void main() => runApp(MaterialApp(
 //          accentColor: Colors.deepOrangeAccent,
           primaryColor: Colors.deepOrange,
           buttonColor: Colors.deepOrange,
-        focusColor: Colors.grey
+//        focusColor: Colors.grey
       ),
       debugShowCheckedModeBanner: false,
     ));
