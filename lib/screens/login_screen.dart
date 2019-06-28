@@ -10,18 +10,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  Services services = new Services();
+
   TextEditingController usuarioController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
 
+  Services services = new Services();
+
   _LoginScreenState(){
     services.getStatus();
-    _testMethodAssync();
-  }
-
-  _testMethodAssync() async{
-    var chave = await services.getChave("08751442000181");
-    print("Chave Retornada: $chave");
   }
 
   @override
