@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/home_screen.dart';
 import 'package:flutter_app/screens/passwordRecuver_screen.dart';
 import 'package:flutter_app/util/Services.dart';
+import 'package:flutter_app/widgets/button_default.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -15,33 +16,36 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController usuarioController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
 
-  Services services = new Services();
+  Services services = Services();
 
-  _LoginScreenState(){
-    services.getStatus();
+  _teste() async{
+    await Services().getToken("administrador", "olivetadmin");
+    await Services().listCaixasAbertos();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    _goToPage(Widget novaPage){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => novaPage));
+    _goToPage(Widget novaPage) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => novaPage));
     }
 
+
+
     _login() async{
-      String token = await services.getToken(usuarioController.text, senhaController.text);
-      if(token!=null){
-        print(token);
-        _goToPage(HomeScreen());
-      }else{
-        _scarffoldKey.currentState.showSnackBar(SnackBar(
-            backgroundColor: Color.fromRGBO(247, 118, 118, 1),
-            duration: Duration(seconds: 2),
-            content: Text('Usuário inválido ou acesso negado!'))
-        );
-        await Future.delayed(
-            Duration(seconds: 2)
-        );
+//      _teste();
+      if (_formKey.currentState.validate()) {
+        String token =
+        await services.getToken(usuarioController.text, senhaController.text);
+        if (token != null) {
+          _goToPage(HomeScreen());
+        } else {
+          _scarffoldKey.currentState.showSnackBar(SnackBar(
+              backgroundColor: Color.fromRGBO(247, 118, 118, 1),
+              duration: Duration(seconds: 2),
+              content: Text('Usuário inválido ou acesso negado!')));
+          await Future.delayed(Duration(seconds: 2));
+        }
       }
     }
 
@@ -68,12 +72,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: 20.0,
                       ),
-                      Image(
-                        height: 120.0,
-                          image: AssetImage("images/logo.png")
+                      Image(height: 120.0, image: AssetImage("images/logo.png")
 //                        image: NetworkImage(
 //                            "http://metre.ddns.net/MetreGestao/javax.faces.resource/logo.png.xhtml?ln=img"),
-                      ),
+                          ),
                       SizedBox(
                         height: 50.0,
                       ),
@@ -109,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: <Widget>[
                       FlatButton(
                         padding: EdgeInsets.all(0),
-                        onPressed: ()=>_goToPage(RecuperarSenhaScreen()),
+                        onPressed: () => _goToPage(RecuperarSenhaScreen()),
                         child: Text(
                           "Esqueci a senha",
                           textAlign: TextAlign.right,
@@ -121,22 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       )
                     ],
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 40.0,
-                    child: RaisedButton(
-                      onPressed: (){
-                        if(_formKey.currentState.validate()){
-                          return _login();
-                        }
-                        return null;
-                      },
-                      child: Text(
-                        "Entrar",
-                        style: TextStyle(color: Colors.white, fontSize: 18.0),
-                      ),
-                    ),
-                  )
+                  ButtomDefault("Entrar", _login)
                 ],
               ),
             )));

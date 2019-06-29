@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pojos/Operador.dart';
+import 'package:flutter_app/util/OUtils.dart';
+import 'package:flutter_app/util/Services.dart';
 import 'package:intl/intl.dart';
 
 class FilterDialog extends StatefulWidget {
@@ -7,38 +10,29 @@ class FilterDialog extends StatefulWidget {
 }
 
 class _FilterDialogState extends State<FilterDialog> {
-  List<String> operadores = List();
-  List<String> turnos = List();
   String _operadorSelecionado;
   String _turnoSelecionado;
   DateTime _dtIni;
   DateTime _dtFim;
-
-  final DateFormat _dateFormat = DateFormat('dd/MM/yyyy');
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    operadores.add("Tadeu");
-    operadores.add("João");
-    operadores.add("Marvin");
-
-    turnos.add("1 - Manhã");
-    turnos.add("2 - Tarde");
-    turnos.add("3 - Noite");
     _dtIni = DateTime.now();
     _dtFim = DateTime.now();
   }
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _FormKey = GlobalKey();
-    final TextEditingController _dtInicialController = TextEditingController();
-    final TextEditingController _dtFinalController = TextEditingController();
+    Future<DateTime> _selectDate() => showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2019),
+        lastDate: DateTime(2025));
 
-    List<DropdownMenuItem<String>> getDropDownMenuItems(List<String> lista) {
+    List<DropdownMenuItem<String>> getDropDownMenuItems(List<dynamic> lista) {
       List<DropdownMenuItem<String>> items = new List();
       for (String item in lista) {
         items.add(new DropdownMenuItem(value: item, child: new Text(item)));
@@ -46,54 +40,67 @@ class _FilterDialogState extends State<FilterDialog> {
       return items;
     }
 
-    Future<DateTime> _selectDate() => showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2019),
-        lastDate: DateTime(2025));
-
     return AlertDialog(
       title: const Text("Informe os Filtros",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
       content: Form(
-        key: _FormKey,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              DropdownButtonFormField(
-                value: _operadorSelecionado,
-                items: getDropDownMenuItems(operadores),
-                hint: Text("Selecione  operador"),
-                onChanged: (operador) {
-                  setState(() {
-                    _operadorSelecionado = operador;
-                  });
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return "Informe o Operador";
-                  }
-                },
-              ),
+              FutureBuilder(
+                  future: Services().listOperadores(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return DropdownButton(
+                        isExpanded: true,
+                        value: _operadorSelecionado,
+                        items: snapshot.data
+                            .map<DropdownMenuItem<Operador>>((Operador op) {
+                          return DropdownMenuItem<Operador>(
+                            value: op,
+                            child: Text(op.nome),
+                          );
+                        }).toList(),
+                        hint: Text("Selecione  operador"),
+                        onChanged: (operador) {
+                          setState(() {
+                            _operadorSelecionado = operador;
+                          });
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }),
               SizedBox(
                 height: 20.0,
               ),
-              DropdownButtonFormField(
-                value: _turnoSelecionado,
-                hint: Text("Selecione turno"),
-                items: getDropDownMenuItems(turnos),
-                onChanged: (turno) {
-                  setState(() {
-                    _turnoSelecionado = turno;
-                  });
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return "Informe o Turno";
-                  }
-                },
-              ),
+              FutureBuilder(
+                  future: Services().listTurnos(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return DropdownButton(
+                        isExpanded: true,
+                        value: _turnoSelecionado,
+                        items: snapshot.data
+                            .map<DropdownMenuItem<String>>((String texto) {
+                          return DropdownMenuItem<String>(
+                            value: texto,
+                            child: Text(texto),
+                          );
+                        }).toList(),
+                        hint: Text("Selecione Turno"),
+                        onChanged: (turno) {
+                          setState(() {
+                            _turnoSelecionado = turno;
+                          });
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }),
               SizedBox(
                 height: 20.0,
               ),
@@ -109,7 +116,7 @@ class _FilterDialogState extends State<FilterDialog> {
                                     color: Colors.black87,
                                     style: BorderStyle.solid))),
                         child: Text(
-                          _dateFormat.format(_dtIni),
+                          OUtils.formataData(_dtIni),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -142,7 +149,7 @@ class _FilterDialogState extends State<FilterDialog> {
                                     color: Colors.black87,
                                     style: BorderStyle.solid))),
                         child: Text(
-                          _dateFormat.format(_dtFim),
+                          OUtils.formataData(_dtFim),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -174,9 +181,11 @@ class _FilterDialogState extends State<FilterDialog> {
         ),
         FlatButton(
           onPressed: () {
-            if (_FormKey.currentState.validate()) {
-              Navigator.of(context).pop();
-            }
+            print(_operadorSelecionado);
+            print(_turnoSelecionado);
+            print(_dtIni);
+            print(_dtFim);
+            Navigator.of(context).pop();
           },
           child: Text("Filtrar"),
         )

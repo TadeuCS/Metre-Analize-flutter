@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/widgets/button_default.dart';
 
 class RecuperarSenhaScreen extends StatefulWidget {
   @override
@@ -64,11 +65,7 @@ class _RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
                   }
                 },
               ),
-              RaisedButton(
-                textColor: Colors.white70,
-                child: Text("Enviar Email"),
-                onPressed: _recuperarSenha,
-              )
+              ButtomDefault("Enviar Email", _recuperarSenha)
             ],
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/util/OUtils.dart';
 import 'package:intl/intl.dart';
 
 class CardItemTotalizer extends StatelessWidget {
@@ -22,13 +23,6 @@ class CardItemTotalizer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _formataValor(double valor) {
-      if (valor != null)
-        return "R\$ " +
-            valor.toStringAsFixed(2).replaceAll(",", "").replaceAll(".", ",");
-      else
-        return "R\$ 0,00";
-    }
 
     Widget _widgetLeft() {
       return Column(
@@ -54,8 +48,9 @@ class CardItemTotalizer extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: valorCenter==null?Text(""):
               Text(
-                tipoColumnCenter==int?valorCenter.toInt().toString():
-                _formataValor(valorCenter),
+                tipoColumnCenter==int?
+                OUtils.OnlyInteger(valorCenter):
+                OUtils.formataMoeda(valorCenter),
                 style: decorationValue == null
                     ? defaultTextStyle
                     : decorationValue,
@@ -75,7 +70,7 @@ class CardItemTotalizer extends StatelessWidget {
             child: icone != null
                 ? icone
                 : Text(
-                    _formataValor(valor),
+                    OUtils.formataMoeda(valor),
                     textAlign: TextAlign.right,
                     style: decorationValue == null
                         ? defaultTextStyle

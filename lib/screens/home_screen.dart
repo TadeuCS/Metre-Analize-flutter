@@ -7,6 +7,9 @@ import 'package:flutter_app/widgets/tab_caixas.dart';
 import 'package:flutter_app/widgets/dialog_filtro.dart';
 
 class HomeScreen extends StatefulWidget {
+
+  HomeScreen();
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -16,14 +19,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> _pagesSwap = <Widget>[
     HomePage(), //tab1
-    CaixasPage() //tab2
+//    CaixasPage(turno, idOperador, dtIni, dtFim) //tab2
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    print("Tab Selecionada $_selectedIndex");
+//    print("Tab Selecionada $_selectedIndex");
   }
 
   _openFilterModal(){

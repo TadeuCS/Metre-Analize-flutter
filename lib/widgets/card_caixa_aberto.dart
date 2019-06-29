@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/util/OUtils.dart';
+import 'package:flutter_app/pojos/TotalizadorCaixa.dart';
+import 'package:flutter_app/widgets/card_item_header.dart';
+import 'package:flutter_app/widgets/card_item_totalizer.dart';
 
 class CardCaixaAberto extends StatelessWidget {
+
+  final TotalizadorCaixa caixa;
+
+
+  CardCaixaAberto(this.caixa);
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -8,49 +18,54 @@ class CardCaixaAberto extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16.0),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Caixa Aberto",
-                  style: TextStyle(fontSize: 15.0),
-                ),
-                Text(
-                  "Tadeu",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 18.0),
-                ),
-                Text(
-                  "Turno da Noite",
-                  style: TextStyle(fontSize: 15.0),
-                ),
-                Text(
-                  "29/03/2019 18:02",
-                  style: TextStyle(fontSize: 15.0),
-                ),
-              ],
+            CardItemHeader(
+              tituloLeft: "Caixa "+caixa.situacao,
+              tituloRight: OUtils.formataDataHora(OUtils.getDateByJSON(caixa.dtAbertura)),
+              decoration: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Icon(Icons.attach_money,size: 25.0, color: Colors.amber,),
-                Text(
-                  "R\$ 500,00",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 15.0),
-                ),
-                Text(
-                  "R\$ 80,00",
-                  style: TextStyle(fontSize: 15.0),
-                ),
-                Text(
-                  "R\$ 420,00",
-                  style: TextStyle(fontSize: 15.0),
-                )
-              ],
+            CardItemHeader(
+              tituloLeft: caixa.turno,
+              tituloRight: caixa.operador,
+            ),
+//            Divider(
+//              color: Colors.grey,
+//            ),
+            CardItemTotalizer(
+              descricao: "Entradas:",
+              valor: caixa.totalEntradas,
+                decorationTitle: TextStyle(
+                    color: Colors.green,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600),
+                decorationValue: TextStyle(
+                    color: Colors.green,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600)
+            ),
+            CardItemTotalizer(
+              descricao: "Saídas:",
+              valor: caixa.totalSaidas,
+                decorationTitle: TextStyle(
+                    color: Colors.red,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600),
+                decorationValue: TextStyle(
+                    color: Colors.red,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600)
+            ),
+            CardItemTotalizer(
+              descricao: "Saldo:",
+              valor: caixa.saldo,
+                decorationTitle: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600),
+                decorationValue: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600)
             ),
           ],
         ),
