@@ -14,7 +14,6 @@ class CardCaixaFechado extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     _detalharVendaBruta(){
       Navigator.push(context, MaterialPageRoute(builder: (context) => DetalhamentoVendaBruta()));
     }

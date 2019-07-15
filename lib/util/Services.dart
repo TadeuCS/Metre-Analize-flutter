@@ -45,6 +45,19 @@ class Services{
   }
 
   //faz login e retorna a key de autenticação da API
+  Future<String> loginJames(String usuario, String senha) async{
+    var response = await http.post('http://metre.ddns.net/services/ticket/login/${usuario}/${senha}');
+    if(response.statusCode==200){
+      _token= jsonDecode(response.body)["usuario"];
+      return _token;
+    }else {
+      print("Request failed with status: ${response.statusCode}.");
+      return null;
+    }
+  }
+
+
+  //faz login e retorna a key de autenticação da API
   Future<String> getToken(String usuario, String senha) async{
     _path="usuario/login/";
     var response = await http.get('$_url$_path?user=$usuario&pass=$senha');
@@ -109,22 +122,27 @@ class Services{
   //lista os caixas encerrados
   Future<List<TotalizadorCaixa>> listCaixasEncerrados({int idOperador, String turno, DateTime dtIni, DateTime dtFim}) async {
     _path="caixa/listar/encerrados/";
+    dtIni=DateTime(2019,04,11);
+    dtFim=DateTime(2019,04,11);
     Map parametros = {
       "auth_token": _token,
-      "id_operador": idOperador,
-      "turno": turno,
+//      "id_operador": idOperador,
+//      "turno": turno,
       "dt_ini": dtIni!=null?OUtils.formataDataSQL(dtIni) :null,
       "dt_fin": dtFim!=null?OUtils.formataDataSQL(dtFim):null
     };
     print(parametros);
-    print(jsonEncode(parametros));
     var response = await http.post('$_url$_path', body: jsonEncode(parametros), headers: requestHeaders);
-
     if(response.statusCode==200){
+      print(response.body);
       var jsonData = json.decode(response.body);
       List<TotalizadorCaixa> lista = List<TotalizadorCaixa>();
       for(var c in jsonData){
-        lista.add(TotalizadorCaixa.fromJson(c));
+        try{
+          lista.add(TotalizadorCaixa.fromJson(c));
+        }catch(e){
+          print(e);
+        }
       }
       return lista;
     }

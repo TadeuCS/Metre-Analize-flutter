@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/model/CaixaModel.dart';
 import 'package:flutter_app/widgets/drawer_sideMenu.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter_app/widgets/tab_home.dart';
 import 'package:flutter_app/widgets/tab_caixas.dart';
 import 'package:flutter_app/widgets/dialog_filtro.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -17,10 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  List<Widget> _pagesSwap = <Widget>[
-    HomePage(), //tab1
-//    CaixasPage(turno, idOperador, dtIni, dtFim) //tab2
-  ];
+  CaixaModel caixaModel;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -28,6 +27,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 //    print("Tab Selecionada $_selectedIndex");
   }
+
+  List<Widget> _pagesSwap = <Widget>[
+    HomePage(), //tab1
+    CaixasPage() //tab2
+  ];
+
+
 
   _openFilterModal(){
      showDialog(
@@ -71,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.amber[800],
           onTap: _onItemTapped,
-        ));
+        )
+    );
   }
 }

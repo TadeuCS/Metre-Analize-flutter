@@ -30,20 +30,18 @@ class _LoginScreenState extends State<LoginScreen> {
           context, MaterialPageRoute(builder: (context) => novaPage));
     }
 
-
-
     _login() async{
-//      _teste();
       if (_formKey.currentState.validate()) {
         String token =
         await services.getToken(usuarioController.text, senhaController.text);
+      print(token);
         if (token != null) {
           _goToPage(HomeScreen());
         } else {
           _scarffoldKey.currentState.showSnackBar(SnackBar(
               backgroundColor: Color.fromRGBO(247, 118, 118, 1),
               duration: Duration(seconds: 2),
-              content: Text('Usuário inválido ou acesso negado!')));
+              content: Text('Usuário inválido ou acesso negado!',textAlign: TextAlign.center,)));
           await Future.delayed(Duration(seconds: 2));
         }
       }
