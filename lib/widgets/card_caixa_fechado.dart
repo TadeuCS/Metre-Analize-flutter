@@ -8,12 +8,10 @@ import 'package:flutter_app/widgets/card_item_totalizer.dart';
 
 class CardCaixaFechado extends StatelessWidget {
 
-  final TotalizadorCaixa caixa;
-
-  CardCaixaFechado(this.caixa);
 
   @override
   Widget build(BuildContext context) {
+    var caixa;
     _detalharVendaBruta(){
       Navigator.push(context, MaterialPageRoute(builder: (context) => DetalhamentoVendaBruta()));
     }

@@ -10,8 +10,8 @@ class TotalizadorForma{
 
   TotalizadorForma.fromJson(Map<String, dynamic> json){
     this.descricao=json["descricao"];
-    this.informado=json["informado"] as double;
-    this.calculado=json["calculado"] as double;
-    this.diferenca=json["diferenca"] as double;
+    this.informado=json["informado"]+0.00 as double;
+    this.calculado=json["calculado"]+0.00 as double;
+    this.diferenca=json["diferenca"]+0.00 as double;
   }
 }

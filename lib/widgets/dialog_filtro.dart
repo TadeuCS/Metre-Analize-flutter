@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/model/CaixaModel.dart';
 import 'package:flutter_app/pojos/Operador.dart';
 import 'package:flutter_app/util/OUtils.dart';
-import 'package:flutter_app/util/Services.dart';
-import 'package:intl/intl.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class FilterDialog extends StatefulWidget {
   @override
@@ -49,7 +49,7 @@ class _FilterDialogState extends State<FilterDialog> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               FutureBuilder(
-                  future: Services().listOperadores(),
+                  future: ScopedModel.of<CaixaModel>(context).listOperadores(""),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return DropdownButton(
@@ -77,7 +77,7 @@ class _FilterDialogState extends State<FilterDialog> {
                 height: 20.0,
               ),
               FutureBuilder(
-                  future: Services().listTurnos(),
+                  future: ScopedModel.of<CaixaModel>(context).listTurnos(""),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return DropdownButton(

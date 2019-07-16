@@ -5,6 +5,7 @@ import 'package:flutter_app/pages/vendas_por_grupos.dart';
 import 'package:flutter_app/pages/vendas_por_modulo.dart';
 import 'package:flutter_app/pages/vendas_por_produtos.dart';
 import 'package:flutter_app/pages/vendas_por_subgrupos.dart';
+import 'package:flutter_app/pojos/TotalizadorCaixa.dart';
 
 class DetalhamentoVendaBruta extends StatelessWidget {
 

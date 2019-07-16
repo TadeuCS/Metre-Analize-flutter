@@ -1,59 +1,189 @@
 import 'package:flutter_app/pojos/TotalizadorForma.dart';
+import 'package:flutter_app/util/OUtils.dart';
 
 class TotalizadorCaixa{
-  int idCaixa;
-  String situacao;
-  String operador;
-  String turno;
-  String dtAbertura;
-  String dtFechamento;
-  double totalEntradas;
-  double totalSaidas;
-  double saldo;
-  double trocoAbertura;
-  double trocoInserido;
-  double vendasBruta;
-  double recebimentos;
-  double suprimentos;
+  int _idCaixa;
+  String _situacao;
+  String _operador;
+  String _turno;
+  String _dtAbertura;
+  String _dtFechamento;
+  double _totalEntradas;
+  double _totalSaidas;
+  double _saldo;
 
-  double sangrias;
-  double cancelamentos;
-  double estornos;
-  double pagamentos;
-  double vales;
-  double trocoRetirado;
-  List<TotalizadorForma> totalizadores=List();
+  double _trocoAbertura;
+  double _trocoInserido;
+  double _vendasBruta;
+  double _recebimentos;
+  double _suprimentos;
 
-  TotalizadorCaixa(this.idCaixa, this.situacao, this.operador, this.turno,
-      this.dtAbertura, this.dtFechamento, this.totalEntradas, this.totalSaidas,
-      this.saldo, this.trocoAbertura, this.trocoInserido, this.vendasBruta,
-      this.recebimentos, this.suprimentos, this.sangrias, this.cancelamentos,
-      this.estornos, this.pagamentos, this.vales, this.trocoRetirado,
-      this.totalizadores);
+  double _sangrias;
+  double _cancelamentos;
+  double _estornos;
+  double _pagamentos;
+  double _vales;
+  double _trocoRetirado;
+  List<TotalizadorForma> _totalizadores=List();
+
+  TotalizadorCaixa(this._idCaixa, this._situacao, this._operador, this._turno,
+      this._dtAbertura, this._dtFechamento, this._totalEntradas,
+      this._totalSaidas, this._saldo, this._trocoAbertura, this._trocoInserido,
+      this._vendasBruta, this._recebimentos, this._suprimentos, this._sangrias,
+      this._cancelamentos, this._estornos, this._pagamentos, this._vales,
+      this._trocoRetirado, this._totalizadores);
 
   TotalizadorCaixa.fromJson(Map<String, dynamic> json){
-    this.idCaixa=json["idCaixa"];
-    this.situacao=json["situacao"];
-    this.operador=json["operador"];
-    this.turno=json["turno"];
-    this.dtAbertura=json["dtAbertura"];
-    this.dtFechamento=json["dtFechamento"];
-    this.totalEntradas=json["totalEntradas"]+0.00 as double;
-    this.totalSaidas=json["totalSaidas"]+0.00 as double;
-    this.saldo=json["saldo"]+0.00 as double;
-    this.trocoAbertura=json["trocoAbertura"]+0.00 as double;
-    this.trocoInserido=json["trocoInserido"]+0.00 as double;
-    this.vendasBruta=json["vendasBruta"]+0.00 as double;
-    this.recebimentos=json["recebimentos"]+0.00 as double;
-    this.suprimentos=json["suprimentos"]+0.00 as double;
-    this.sangrias=json["sangrias"]+0.00 as double;
-    this.cancelamentos=json["cancelamentos"]+0.00 as double;
-    this.estornos=json["estornos"]+0.00 as double;
-    this.pagamentos=json["pagamentos"]+0.00 as double;
-    this.vales=json["vales"]+0.00 as double;
-    this.trocoRetirado=json["trocoRetirado"]+0.00 as double;
-    for(var t in json["totalizadores"]) {
-      this.totalizadores.add(TotalizadorForma.fromJson(t));
+    this._idCaixa=json["idCaixa"];
+    this._situacao=json["situacao"];
+    this._operador=json["operador"];
+    this._turno=json["turno"];
+    this._dtAbertura=json["dtAbertura"];
+    this._dtFechamento=json["dtFechamento"];
+    this._totalEntradas=OUtils.convertToDouble(json["totalEntradas"]);
+    this._totalSaidas=OUtils.convertToDouble(json["totalSaidas"]);
+    this._saldo=OUtils.convertToDouble(json["saldo"]);
+    this._trocoAbertura=OUtils.convertToDouble(json["trocoAbertura"]);
+    this._trocoInserido=OUtils.convertToDouble(json["trocoInserido"]);
+    this._vendasBruta=OUtils.convertToDouble(json["vendasBruta"]);
+    this._recebimentos=OUtils.convertToDouble(json["recebimentos"]);
+    this._suprimentos=OUtils.convertToDouble(json["suprimentos"]);
+    this._sangrias=OUtils.convertToDouble(json["sangrias"]);
+    this._cancelamentos=OUtils.convertToDouble(json["cancelamentos"]);
+    this._estornos=OUtils.convertToDouble(json["estornos"]);
+    this._pagamentos=OUtils.convertToDouble(json["pagamentos"]);
+    this._vales=OUtils.convertToDouble(json["vales"]);
+    this._trocoRetirado=OUtils.convertToDouble(json["trocoRetirado"]);
+    if(json["totalizadores"]!=null) {
+      for (var t in json["totalizadores"]) {
+        this._totalizadores.add(TotalizadorForma.fromJson(t));
+      }
     }
+  }
+
+  int get idCaixa => _idCaixa;
+
+  set idCaixa(int value) {
+    _idCaixa = value;
+  }
+
+  double get trocoRetirado => OUtils.convertToDouble(_trocoRetirado);
+
+  set trocoRetirado(double value) {
+    _trocoRetirado = value;
+  }
+
+  double get vales => OUtils.convertToDouble(_vales);
+
+  set vales(double value) {
+    _vales = value;
+  }
+
+  double get pagamentos => OUtils.convertToDouble(_pagamentos);
+
+  set pagamentos(double value) {
+    _pagamentos = value;
+  }
+
+  double get estornos => OUtils.convertToDouble(_estornos);
+
+  set estornos(double value) {
+    _estornos = value;
+  }
+
+  double get cancelamentos => OUtils.convertToDouble(_cancelamentos);
+
+  set cancelamentos(double value) {
+    _cancelamentos = value;
+  }
+
+  double get sangrias => OUtils.convertToDouble(_sangrias);
+
+  set sangrias(double value) {
+    _sangrias = value;
+  }
+
+  double get suprimentos => OUtils.convertToDouble(_suprimentos);
+
+  set suprimentos(double value) {
+    _suprimentos = value;
+  }
+
+  double get recebimentos => OUtils.convertToDouble(_recebimentos);
+
+  set recebimentos(double value) {
+    _recebimentos = value;
+  }
+
+  double get vendasBruta => OUtils.convertToDouble(_vendasBruta);
+
+  set vendasBruta(double value) {
+    _vendasBruta = value;
+  }
+
+  double get trocoInserido => OUtils.convertToDouble(_trocoInserido);
+
+  set trocoInserido(double value) {
+    _trocoInserido = value;
+  }
+
+  double get trocoAbertura => OUtils.convertToDouble(_trocoAbertura);
+
+  set trocoAbertura(double value) {
+    _trocoAbertura = value;
+  }
+
+  double get saldo => OUtils.convertToDouble(_saldo);
+
+  set saldo(double value) {
+    _saldo = value;
+  }
+
+  double get totalSaidas => OUtils.convertToDouble(_totalSaidas);
+
+  set totalSaidas(double value) {
+    _totalSaidas = value;
+  }
+
+  double get totalEntradas => OUtils.convertToDouble(_totalEntradas);
+
+  set totalEntradas(double value) {
+    _totalEntradas = value;
+  }
+
+  String get dtFechamento => _dtFechamento;
+
+  set dtFechamento(String value) {
+    _dtFechamento = value;
+  }
+
+  String get dtAbertura => _dtAbertura;
+
+  set dtAbertura(String value) {
+    _dtAbertura = value;
+  }
+
+  String get turno => _turno;
+
+  set turno(String value) {
+    _turno = value;
+  }
+
+  String get operador => _operador;
+
+  set operador(String value) {
+    _operador = value;
+  }
+
+  String get situacao => _situacao;
+
+  set situacao(String value) {
+    _situacao = value;
+  }
+
+  List<TotalizadorForma> get totalizadores => _totalizadores;
+
+  set totalizadores(List<TotalizadorForma> value) {
+    _totalizadores = value;
   }
 }

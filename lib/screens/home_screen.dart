@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/CaixaModel.dart';
+import 'package:flutter_app/model/UsuarioModel.dart';
 import 'package:flutter_app/widgets/drawer_sideMenu.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //          automaticallyImplyLeading: false,
           centerTitle: true,
           backgroundColor: Colors.deepOrangeAccent,
-          title: const Text('Metre Analize'),
+          title: Text('Metre Analize'),
           actions: _selectedIndex==0 ? []:
           <Widget>[
             IconButton(
