@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/model/CaixaModel.dart';
+import 'package:flutter_app/pojos/TotalizadorCaixa.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class VendaBruta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    TotalizadorCaixa caixa = ScopedModel.of<CaixaModel>(context).caixaSelecionado;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -27,22 +31,22 @@ class VendaBruta extends StatelessWidget {
             ),
             CardItemTotalizer(
               descricao: "(+) Venda Bruta:",
-              valor: 1235.00,
+              valor: caixa.vendasBruta,
             ),
             CardItemTotalizer(
               descricao: "(-) Cancelamentos:",
-              valor: 0.00,
+              valor: caixa.cancelamentos,
             ),
             CardItemTotalizer(
               descricao: "(-) Estornos:",
-              valor: 0.00,
+              valor: caixa.estornos,
             ),
             Divider(
               color: Colors.grey,
             ),
             CardItemTotalizer(
               descricao: "(=) Venda Liquida:",
-              valor: 1235.0,
+              valor: (caixa.vendasBruta-caixa.estornos-caixa.estornos),
               decorationTitle: TextStyle(
                   fontSize: 18.0, fontWeight: FontWeight.w600),
               decorationValue: TextStyle(

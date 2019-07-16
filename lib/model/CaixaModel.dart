@@ -17,13 +17,19 @@ import 'package:flutter_app/pojos/VendasPorSubGrupo.dart';
 import 'package:flutter_app/util/OUtils.dart';
 
 class CaixaModel extends Model {
-  int _idOperador;
-  String _turno;
-  DateTime _dtIni;
-  DateTime _dtFin;
-  String _path;
+  //filtros
+  int idOperador;
+  String turno;
+  DateTime dtIni;
+  DateTime dtFin;
 
-  List<TotalizadorCaixa> _caixasFiltrados;
+  //variáveis das consultas
+  String _path;
+  String _token;
+
+  //variáveis temporárias
+  List<TotalizadorCaixa> caixasFiltrados=List();
+  TotalizadorCaixa caixaSelecionado;
 
   final String _urlApi="http://metre.ddns.net/services/analize/";
   final Map<String, String> requestHeaders = {
@@ -32,9 +38,20 @@ class CaixaModel extends Model {
 
   static CaixaModel of(BuildContext context) =>
       ScopedModel.of<CaixaModel>(context);
+  
+  CaixaModel(this._token);
 
-   //lista os turnos de todos os caixas já abertos
-  Future<List<String>> listTurnos(String _token) async {
+  //Filtrar os caixas encerrados
+  void filtrarCaixasEncerrados(){
+    print("Operador: ${idOperador}");
+    print("Turno: ${turno}");
+    print("Dt Ini: ${dtIni}");
+    print("Dt Fin: ${dtFin}");
+    notifyListeners();
+  }
+
+  //lista os turnos de todos os caixas já abertos
+  Future<List<String>> listTurnos() async {
     _path="caixa/listar/turnos/";
     var response = await http.post('$_urlApi$_path', body: jsonEncode({"auth_token": _token}), headers: requestHeaders);
     if(response.statusCode==200){
@@ -49,7 +66,7 @@ class CaixaModel extends Model {
   }
 
   //lista os usuários do tipo operador de caixa
-  Future<List<Operador>> listOperadores(String _token) async {
+  Future<List<Operador>> listOperadores() async {
     _path="caixa/listar/operadores/";
     var response = await http.post('$_urlApi$_path', body: jsonEncode({"auth_token": _token}), headers: requestHeaders);
     if(response.statusCode==200){
@@ -65,7 +82,7 @@ class CaixaModel extends Model {
   }
 
   //lista os caixas abertos
-  Future<List<TotalizadorCaixa>> listCaixasAbertos(String _token) async {
+  Future<List<TotalizadorCaixa>> listCaixasAbertos() async {
     _path="caixa/listar/abertos/";
     var response = await http.post('$_urlApi$_path', body: json.encode({"auth_token":_token}), headers: requestHeaders);
 
@@ -86,21 +103,17 @@ class CaixaModel extends Model {
   }
 
   //lista os caixas encerrados
-  Future<List<TotalizadorCaixa>> listCaixasEncerrados(String _token, {int idOperador, String turno, DateTime dtIni, DateTime dtFim}) async {
+  Future<List<TotalizadorCaixa>> listCaixasEncerrados() async {
     _path="caixa/listar/encerrados/";
-    dtIni=DateTime(2019,04,11);
-    dtFim=DateTime(2019,04,11);
     Map parametros = {
       "auth_token": _token,
-//      "id_operador": idOperador,
 //      "turno": turno,
-      "dt_ini": dtIni!=null?OUtils.formataDataSQL(dtIni) :null,
-      "dt_fin": dtFim!=null?OUtils.formataDataSQL(dtFim):null
+//      "id_operador": idOperador,
+      "dt_ini": dtIni!=null?OUtils.formataDataSQL(dtIni):OUtils.formataDataSQL(DateTime(2019,04,11)),
+      "dt_fin": dtFin!=null?OUtils.formataDataSQL(dtFin):OUtils.formataDataSQL(DateTime(2019,04,11))
     };
-    print(parametros);
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     if(response.statusCode==200){
-      print(response.body);
       var jsonData = json.decode(utf8.decode(response.bodyBytes));
       List<TotalizadorCaixa> lista = List<TotalizadorCaixa>();
       for(var c in jsonData){
@@ -116,13 +129,13 @@ class CaixaModel extends Model {
   }
 
   //retorna o caixa pelo id
-  Future<TotalizadorCaixa> getCaixa(String _token, int idCaixa) async {
+  Future<TotalizadorCaixa> getCaixa( int idCaixa) async {
     _path="caixa/";
     dynamic parametros = {
       "auth_token": _token,
       "id_caixa": idCaixa,
     };
-    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros));
+    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     if (response.statusCode == 200) {
       TotalizadorCaixa caixa = json.decode(response.body).cast<TotalizadorCaixa>();
       return caixa;
@@ -133,16 +146,24 @@ class CaixaModel extends Model {
   }
 
   //lista os totalizadores da venda bruta por forma
-  Future<List<TotalizadorForma>> listTotalizadorFormas(String _token, int idCaixa) async {
+  Future<List<TotalizadorForma>> listTotalizadorFormas( int idCaixa) async {
     _path="vendas/formas/";
     dynamic parametros = {
       "auth_token": _token,
       "id_caixa": idCaixa,
     };
-    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros));
+    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     if (response.statusCode == 200) {
-      List<TotalizadorForma> formas = json.decode(response.body).cast<List<TotalizadorForma>>();
-      return formas;
+      var jsonData = json.decode(utf8.decode(response.bodyBytes));
+      List<TotalizadorForma> lista = List<TotalizadorForma>();
+      for(var c in jsonData){
+        try{
+          lista.add(TotalizadorForma.fromJson(c));
+        }catch(e){
+          print(e);
+        }
+      }
+      return lista;
     } else {
       print("Request failed with status: ${response.statusCode}.");
       return null;
@@ -150,13 +171,13 @@ class CaixaModel extends Model {
   }
 
   //lista os totalizadores da venda bruta por módulos
-  Future<TotalizadorModulo> listTotalizadorModulos(String _token, int idCaixa) async {
+  Future<TotalizadorModulo> listTotalizadorModulos( int idCaixa) async {
     _path="vendas/modulos/";
     dynamic parametros = {
       "auth_token": _token,
       "id_caixa": idCaixa,
     };
-    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros));
+    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     if (response.statusCode == 200) {
       TotalizadorModulo modulos = json.decode(response.body).cast<TotalizadorModulo>();
       return modulos;
@@ -167,16 +188,16 @@ class CaixaModel extends Model {
   }
 
   //lista os totalizadores da venda liquida
-  Future<TotalizadorVendaLiquida> listTotalizadorVendaLiquida(String _token, int idCaixa) async {
+  Future<TotalizadorVendaLiquida> listTotalizadorVendaLiquida( int idCaixa) async {
     _path="vendas/liquida/";
     dynamic parametros = {
       "auth_token": _token,
       "id_caixa": idCaixa,
     };
-    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros));
+    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     if (response.statusCode == 200) {
-      TotalizadorVendaLiquida vendaLiquida = json.decode(response.body).cast<TotalizadorVendaLiquida>();
-      return vendaLiquida;
+      var jsonData = json.decode(utf8.decode(response.bodyBytes));
+      return TotalizadorVendaLiquida.fromJson(jsonData);
     } else {
       print("Request failed with status: ${response.statusCode}.");
       return null;
@@ -184,13 +205,13 @@ class CaixaModel extends Model {
   }
 
   //lista os totalizadores da venda bruta por atendente
-  Future<List<TotalizadorAtendente>> listTotalizadorAtendente(String _token, int idCaixa) async {
+  Future<List<TotalizadorAtendente>> listTotalizadorAtendente( int idCaixa) async {
     _path="vendas/atendentes/";
     dynamic parametros = {
       "auth_token": _token,
       "id_caixa": idCaixa,
     };
-    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros));
+    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     if (response.statusCode == 200) {
       List<TotalizadorAtendente> vendasPorAtendentes = json.decode(response.body).cast<List<TotalizadorAtendente>>();
       return vendasPorAtendentes;
@@ -201,7 +222,7 @@ class CaixaModel extends Model {
   }
 
   //lista os totalizadores da venda liquida por Produtos
-  Future<List<VendasPorProduto>> listTotalizadorPorProdutos(String _token, int idCaixa, int pos_ini, int qtde_limit) async {
+  Future<List<VendasPorProduto>> listTotalizadorPorProdutos( int idCaixa, int pos_ini, int qtde_limit) async {
     _path="vendas/produtos/";
     dynamic parametros = {
       "auth_token": _token,
@@ -209,7 +230,7 @@ class CaixaModel extends Model {
       "pos_ini" : pos_ini,
       "qtde_limit": qtde_limit
     };
-    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros));
+    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     if (response.statusCode == 200) {
       List<VendasPorProduto> vendasPorProdutos = json.decode(response.body).cast<List<VendasPorProduto>>();
       return vendasPorProdutos;
@@ -220,7 +241,7 @@ class CaixaModel extends Model {
   }
 
   //lista os totalizadores da venda liquida por grupos
-  Future<List<VendasPorGrupo>> listTotalizadorPorGrupos(String _token, int idCaixa, int pos_ini, int qtde_limit) async {
+  Future<List<VendasPorGrupo>> listTotalizadorPorGrupos( int idCaixa, int pos_ini, int qtde_limit) async {
     _path="vendas/grupos/";
     dynamic parametros = {
       "auth_token": _token,
@@ -228,7 +249,7 @@ class CaixaModel extends Model {
       "pos_ini" : pos_ini,
       "qtde_limit": qtde_limit
     };
-    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros));
+    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     if (response.statusCode == 200) {
       List<VendasPorGrupo> vendasPorGrupos = json.decode(response.body).cast<List<VendasPorGrupo>>();
       return vendasPorGrupos;
@@ -239,7 +260,7 @@ class CaixaModel extends Model {
   }
 
   //lista os totalizadores da venda liquida por subgrupos
-  Future<List<VendasPorSubGrupo>> listTotalizadorPorSubGrupos(String _token, int idCaixa, int pos_ini, int qtde_limit) async {
+  Future<List<VendasPorSubGrupo>> listTotalizadorPorSubGrupos( int idCaixa, int pos_ini, int qtde_limit) async {
     _path="vendas/subgrupos/";
     dynamic parametros = {
       "auth_token": _token,
@@ -247,7 +268,7 @@ class CaixaModel extends Model {
       "pos_ini" : pos_ini,
       "qtde_limit": qtde_limit
     };
-    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros));
+    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     if (response.statusCode == 200) {
       List<VendasPorSubGrupo> vendasPorSubGrupos = json.decode(response.body).cast<List<VendasPorSubGrupo>>();
       return vendasPorSubGrupos;
@@ -258,13 +279,13 @@ class CaixaModel extends Model {
   }
 
   //lista os totalizadores das vendas por Horario do caixa
-  Future<List<VendasPorHorario>> listTotalizadorPorHorario(String _token, int idCaixa) async {
+  Future<List<VendasPorHorario>> listTotalizadorPorHorario( int idCaixa) async {
     _path="vendas/horarios/";
     dynamic parametros = {
       "auth_token": _token,
       "id_caixa": idCaixa,
     };
-    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros));
+    var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     if (response.statusCode == 200) {
       List<VendasPorHorario> vendasPorSubGrupos = json.decode(response.body).cast<List<VendasPorHorario>>();
       return vendasPorSubGrupos;

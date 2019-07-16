@@ -10,14 +10,18 @@ import 'package:flutter_app/widgets/dialog_filtro.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class HomeScreen extends StatefulWidget {
-
-  HomeScreen();
+  final UsuarioModel _usuarioModel;
+  HomeScreen(this._usuarioModel);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState(_usuarioModel);
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final UsuarioModel usuarioModel;
+
+  _HomeScreenState(this.usuarioModel);
+
   int _selectedIndex = 0;
 
   CaixaModel caixaModel;
@@ -34,51 +38,53 @@ class _HomeScreenState extends State<HomeScreen> {
     CaixasPage() //tab2
   ];
 
-
-
-  _openFilterModal(){
-     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context){
-         return FilterDialog();
-        }
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: SideMenu(),
-        appBar: AppBar(
+    final CaixaModel caixaModel =
+    CaixaModel(usuarioModel.usuarioLogado.authToken);
+
+    _openFilterModal() {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return FilterDialog(caixaModel);
+          });
+    }
+
+    return ScopedModel<CaixaModel>(
+        model: caixaModel,
+        child: Scaffold(
+            drawer: SideMenu(),
+            appBar: AppBar(
 //          automaticallyImplyLeading: false,
-          centerTitle: true,
-          backgroundColor: Colors.deepOrangeAccent,
-          title: Text('Metre Analize'),
-          actions: _selectedIndex==0 ? []:
-          <Widget>[
-            IconButton(
-              icon: Icon(Icons.filter_list),
-              onPressed: _openFilterModal,
-            )
-          ],
-        ),
-        body: _pagesSwap.elementAt(_selectedIndex),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text('Início'),
+              centerTitle: true,
+              backgroundColor: Colors.deepOrangeAccent,
+              title: Text('Metre Analize'),
+              actions: _selectedIndex == 0
+                  ? []
+                  : <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.filter_list),
+                        onPressed: _openFilterModal,
+                      )
+                    ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.apps),
-              title: Text('Caixas'),
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
-          onTap: _onItemTapped,
-        )
-    );
+            body: _pagesSwap.elementAt(_selectedIndex),
+            bottomNavigationBar: BottomNavigationBar(
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  title: Text('Início'),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.apps),
+                  title: Text('Caixas'),
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              selectedItemColor: Colors.amber[800],
+              onTap: _onItemTapped,
+            )));
   }
 }

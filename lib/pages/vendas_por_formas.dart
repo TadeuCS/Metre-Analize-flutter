@@ -1,50 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/model/CaixaModel.dart';
+import 'package:flutter_app/pojos/TotalizadorCaixa.dart';
+import 'package:flutter_app/pojos/TotalizadorForma.dart';
 import 'package:flutter_app/widgets/card_item_header.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
 import 'package:flutter_app/widgets/card_venda_bruta.dart';
 import 'package:flutter_app/widgets/card_venda_liquida.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-class VendasPorForma extends StatefulWidget {
-  @override
-  _VendasPorFormaState createState() => _VendasPorFormaState();
-}
+class VendasPorForma extends StatelessWidget {
 
-class _VendasPorFormaState extends State<VendasPorForma> {
+  double _totaliza(List<TotalizadorForma> totais){
+    double total=0.00;
+    for(var t in totais.map((tot)=>tot.calculado)){
+      total=total+t;
+    }
+    return total;
+  }
+
   @override
   Widget build(BuildContext context) {
+    CaixaModel caixaModel=ScopedModel.of<CaixaModel>(context);
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
           VendaBruta(),
           VendaLiquida(),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: <Widget>[
-                  CardItemTotalizer(
-                      descricao: "Vendas por Formas",
-                      decorationTitle:
-                      TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
-                      icone: const Icon(
-                        Icons.attach_money,
-                        color: Colors.deepOrangeAccent,
-                        size: 30.0,
-                      )),
-                  Divider(color: Colors.grey,),
-                  CardItemTotalizer(descricao: "Dinheiro", valor: 500.0,),
-                  CardItemTotalizer(descricao: "Cartão", valor: 500.0,),
-                  CardItemTotalizer(descricao: "Crédito", valor: 0.0,),
-                  CardItemTotalizer(descricao: "Vale Refeição", valor: 0.0,),
-                  Divider(color: Colors.grey,),
-                  CardItemTotalizer(descricao: "Total:", valor: 1000.0, decorationTitle: TextStyle(
-                      fontSize: 15.0, fontWeight: FontWeight.w600),
-                    decorationValue: TextStyle(
-                        fontSize: 15.0, fontWeight: FontWeight.w600),)
-                ],
-              ),
-            ),
-          ),
+          FutureBuilder(
+            future: caixaModel.listTotalizadorFormas(caixaModel.caixaSelecionado.idCaixa),
+            builder: (context, snapshot){
+              if(snapshot.hasError){
+                print(snapshot.error);
+                return Text("Erro ao listar os totalizadores por formas");
+              }
+              if(!snapshot.hasData){
+                return Center(child: CircularProgressIndicator(),);
+              }else{
+                List<TotalizadorForma> totalizadores = snapshot.data;
+                return Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: <Widget>[
+                        CardItemTotalizer(
+                            descricao: "Vendas por Formas",
+                            decorationTitle:
+                            TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+                            icone: const Icon(
+                              Icons.attach_money,
+                              color: Colors.deepOrangeAccent,
+                              size: 30.0,
+                            )),
+                        Divider(color: Colors.grey,),
+                        Column(
+                          children: totalizadores.map((tot)=> CardItemTotalizer(descricao: tot.descricao, valor: tot.calculado,)).toList(),
+                        ),
+
+                        Divider(color: Colors.grey,),
+                        CardItemTotalizer(descricao: "Total:", valor: _totaliza(totalizadores), decorationTitle: TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.w600),
+                          decorationValue: TextStyle(
+                              fontSize: 15.0, fontWeight: FontWeight.w600),)
+                      ],
+                    ),
+                  ),
+                );
+              }
+            },
+          )
         ],
       ),
     );

@@ -175,7 +175,7 @@ class TotalizadorCaixa{
     _operador = value;
   }
 
-  String get situacao => _situacao;
+  String get situacao => _situacao==null?"":_situacao;
 
   set situacao(String value) {
     _situacao = value;

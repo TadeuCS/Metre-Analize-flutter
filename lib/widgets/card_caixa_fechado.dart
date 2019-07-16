@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/model/CaixaModel.dart';
 import 'package:flutter_app/pojos/TotalizadorCaixa.dart';
 import 'package:flutter_app/screens/venda_bruta_screen.dart';
 import 'package:flutter_app/util/OUtils.dart';
 import 'package:flutter_app/widgets/button_default.dart';
 import 'package:flutter_app/widgets/card_item_header.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class CardCaixaFechado extends StatelessWidget {
 
+  final TotalizadorCaixa caixa;
+
+  CardCaixaFechado(this.caixa);
 
   @override
   Widget build(BuildContext context) {
-    var caixa;
     _detalharVendaBruta(){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => DetalhamentoVendaBruta()));
+      CaixaModel caixaModel = ScopedModel.of<CaixaModel>(context);
+      caixaModel.caixaSelecionado = this.caixa;
+      print(caixaModel.caixaSelecionado.idCaixa);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => DetalhamentoVendaBruta(caixaModel)));
     }
 
     return Card(
@@ -112,6 +119,5 @@ class CardCaixaFechado extends StatelessWidget {
       ),
     );
   }
-
 
 }

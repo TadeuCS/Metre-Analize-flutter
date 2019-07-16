@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/model/CaixaModel.dart';
 import 'package:flutter_app/pages/vendas_por_atendente.dart';
 import 'package:flutter_app/pages/vendas_por_formas.dart';
 import 'package:flutter_app/pages/vendas_por_grupos.dart';
@@ -6,8 +7,13 @@ import 'package:flutter_app/pages/vendas_por_modulo.dart';
 import 'package:flutter_app/pages/vendas_por_produtos.dart';
 import 'package:flutter_app/pages/vendas_por_subgrupos.dart';
 import 'package:flutter_app/pojos/TotalizadorCaixa.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class DetalhamentoVendaBruta extends StatelessWidget {
+
+  final CaixaModel caixaModel;
+
+  DetalhamentoVendaBruta(this.caixaModel);
 
   PageController _pageController = PageController();
   int _paginaSelecionada = 0;
@@ -61,19 +67,22 @@ class DetalhamentoVendaBruta extends StatelessWidget {
           backgroundColor: Colors.deepOrangeAccent,
           title: Text("Detalhamento do Caixa"),
         ),
-        body: Container(
-          padding: const EdgeInsets.all(10.0),
-          child: PageView(
-            controller: _pageController,
-            physics: NeverScrollableScrollPhysics(),
-            children: <Widget>[
-              VendasPorForma(),
-              VendasPorAtendente(),
-              VendasPorModulo(),
-              VendasPorProdutos(),
-              VendasPorGrupos(),
-              VendasPorSubGrupos()
-            ],
+        body: ScopedModel<CaixaModel>(
+          model: caixaModel,
+          child: Container(
+            padding: const EdgeInsets.all(10.0),
+            child: PageView(
+              controller: _pageController,
+              physics: NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                VendasPorForma(),
+                VendasPorAtendente(),
+                VendasPorModulo(),
+                VendasPorProdutos(),
+                VendasPorGrupos(),
+                VendasPorSubGrupos()
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(

@@ -5,30 +5,35 @@ import 'package:flutter_app/util/OUtils.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class FilterDialog extends StatefulWidget {
+
+  final CaixaModel _caixaModel;
+
+  FilterDialog(this._caixaModel);
+
   @override
-  _FilterDialogState createState() => _FilterDialogState();
+  _FilterDialogState createState() => _FilterDialogState(_caixaModel);
 }
 
 class _FilterDialogState extends State<FilterDialog> {
-  String _operadorSelecionado;
-  String _turnoSelecionado;
-  DateTime _dtIni;
-  DateTime _dtFim;
+
+  final CaixaModel caixaModel;
+
+  _FilterDialogState(this.caixaModel);
 
   @override
   void initState() {
-    // TODO: implement initState
+    if(caixaModel.dtIni==null){
+      caixaModel.dtIni=DateTime.now();
+      caixaModel.dtFin=DateTime.now();
+    }
     super.initState();
-
-    _dtIni = DateTime.now();
-    _dtFim = DateTime.now();
   }
 
   @override
   Widget build(BuildContext context) {
     Future<DateTime> _selectDate() => showDatePicker(
         context: context,
-        initialDate: DateTime.now(),
+        initialDate: caixaModel.dtIni,
         firstDate: DateTime(2019),
         lastDate: DateTime(2025));
 
@@ -49,12 +54,12 @@ class _FilterDialogState extends State<FilterDialog> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               FutureBuilder(
-                  future: ScopedModel.of<CaixaModel>(context).listOperadores(""),
+                  future: caixaModel.listOperadores(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return DropdownButton(
                         isExpanded: true,
-                        value: _operadorSelecionado,
+                        value: caixaModel.idOperador,
                         items: snapshot.data
                             .map<DropdownMenuItem<Operador>>((Operador op) {
                           return DropdownMenuItem<Operador>(
@@ -65,7 +70,8 @@ class _FilterDialogState extends State<FilterDialog> {
                         hint: Text("Selecione  operador"),
                         onChanged: (operador) {
                           setState(() {
-                            _operadorSelecionado = operador;
+                            Operador operadorSelecionado = operador;
+                            caixaModel.idOperador= operadorSelecionado.idOperador;
                           });
                         },
                       );
@@ -77,12 +83,12 @@ class _FilterDialogState extends State<FilterDialog> {
                 height: 20.0,
               ),
               FutureBuilder(
-                  future: ScopedModel.of<CaixaModel>(context).listTurnos(""),
+                  future: caixaModel.listTurnos(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return DropdownButton(
                         isExpanded: true,
-                        value: _turnoSelecionado,
+                        value: caixaModel.turno,
                         items: snapshot.data
                             .map<DropdownMenuItem<String>>((String texto) {
                           return DropdownMenuItem<String>(
@@ -93,7 +99,7 @@ class _FilterDialogState extends State<FilterDialog> {
                         hint: Text("Selecione Turno"),
                         onChanged: (turno) {
                           setState(() {
-                            _turnoSelecionado = turno;
+                            caixaModel.turno= turno;
                           });
                         },
                       );
@@ -116,7 +122,7 @@ class _FilterDialogState extends State<FilterDialog> {
                                     color: Colors.black87,
                                     style: BorderStyle.solid))),
                         child: Text(
-                          OUtils.formataData(_dtIni),
+                          OUtils.formataData(caixaModel.dtIni),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -130,7 +136,7 @@ class _FilterDialogState extends State<FilterDialog> {
                     return;
                   else
                     setState(() {
-                      _dtIni = dateSelected;
+                      caixaModel.dtIni = dateSelected;
                     });
                 },
               ),
@@ -149,7 +155,7 @@ class _FilterDialogState extends State<FilterDialog> {
                                     color: Colors.black87,
                                     style: BorderStyle.solid))),
                         child: Text(
-                          OUtils.formataData(_dtFim),
+                          OUtils.formataData(caixaModel.dtFin),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -163,7 +169,7 @@ class _FilterDialogState extends State<FilterDialog> {
                     return;
                   else
                     setState(() {
-                      _dtFim = dateSelected;
+                      caixaModel.dtFin = dateSelected;
                     });
                 },
               )
@@ -181,10 +187,7 @@ class _FilterDialogState extends State<FilterDialog> {
         ),
         FlatButton(
           onPressed: () {
-            print(_operadorSelecionado);
-            print(_turnoSelecionado);
-            print(_dtIni);
-            print(_dtFim);
+            caixaModel.filtrarCaixasEncerrados();
             Navigator.of(context).pop();
           },
           child: Text("Filtrar"),

@@ -13,8 +13,8 @@ class UsuarioModel extends Model{
     'content-type': 'application/json'
   };
 
-  static UsuarioModel of(BuildContext context) =>
-      ScopedModel.of<UsuarioModel>(context);
+//  static UsuarioModel of(BuildContext context) =>
+//      ScopedModel.of<UsuarioModel>(context);
 
    //faz login e retorna a key de autenticação da API
   Future<UsuarioPojo> login(String usuario, String senha) async{

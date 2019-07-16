@@ -1,17 +1,46 @@
+import 'package:flutter_app/util/OUtils.dart';
+
 class TotalizadorForma{
 
-  String descricao;
-  double informado;
-  double calculado;
-  double diferenca;
+  String _descricao;
+  double _informado;
+  double _calculado;
+  double _diferenca;
 
-  TotalizadorForma(this.descricao, this.informado, this.calculado,
-      this.diferenca);
+
+  TotalizadorForma(this._descricao, this._informado, this._calculado,
+      this._diferenca);
 
   TotalizadorForma.fromJson(Map<String, dynamic> json){
-    this.descricao=json["descricao"];
-    this.informado=json["informado"]+0.00 as double;
-    this.calculado=json["calculado"]+0.00 as double;
-    this.diferenca=json["diferenca"]+0.00 as double;
+    this._descricao=json["descricao"];
+    this._informado=json["informado"];
+    this._calculado=json["calculado"];
+    this._diferenca=json["diferenca"];
   }
+
+  double get diferenca => OUtils.convertToDouble(_diferenca);
+
+  set diferenca(double value) {
+    _diferenca = value;
+  }
+
+  double get calculado => OUtils.convertToDouble(_calculado);
+
+  set calculado(double value) {
+    _calculado = value;
+  }
+
+  double get informado => OUtils.convertToDouble(_informado);
+
+  set informado(double value) {
+    _informado = value;
+  }
+
+  String get descricao => _descricao;
+
+  set descricao(String value) {
+    _descricao = value;
+  }
+
+
 }

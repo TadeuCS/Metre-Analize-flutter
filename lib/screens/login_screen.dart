@@ -18,17 +18,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController usuarioController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
-  UsuarioModel _userModel;
 
-
-  @override
-  void initState() {
-    _userModel=UsuarioModel();
-    super.initState();
-  }
+  UsuarioModel _userModel= UsuarioModel();
 
   @override
   Widget build(BuildContext context) {
+
     _goToPage(Widget novaPage) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => novaPage));
@@ -38,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (_formKey.currentState.validate()) {
             UsuarioPojo usuarioLogado = await _userModel.login(usuarioController.text, senhaController.text);
             if (usuarioLogado != null) {
-              _goToPage(HomeScreen());
+              _goToPage(HomeScreen(_userModel));
             } else {
               _scarffoldKey.currentState.showSnackBar(SnackBar(
                   backgroundColor: Color.fromRGBO(247, 118, 118, 1),
@@ -49,92 +44,87 @@ class _LoginScreenState extends State<LoginScreen> {
        }
       }
 
-    return ScopedModel<UsuarioModel>(
-     model: _userModel,
-     child: Scaffold(
-         key: _scarffoldKey,
-         body: ScopedModelDescendant<UsuarioModel>(
-             rebuildOnChange: true,
-             builder: (context, child, model){
-               return SingleChildScrollView(
-                   padding: const EdgeInsets.all(15.0),
-                   child: Form(
-                     key: _formKey,
-                     child: Column(
-                       children: <Widget>[
-                         Column(
-                           mainAxisAlignment: MainAxisAlignment.center,
-                           children: <Widget>[
-                             SizedBox(
-                               height: 150.0,
-                             ),
-                             Text(
-                               "Entrar",
-                               textAlign: TextAlign.center,
-                               style: const TextStyle(
-                                   color: Colors.black54, fontSize: 25.0),
-                             ),
-                             SizedBox(
-                               height: 20.0,
-                             ),
-                             Image(height: 120.0, image: AssetImage("images/logo.png")
+    return Scaffold(
+        key: _scarffoldKey,
+        body: ScopedModel(
+            model: _userModel,
+            child: SingleChildScrollView(
+            padding: const EdgeInsets.all(15.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 150.0,
+                      ),
+                      Text(
+                        "Entrar",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: Colors.black54, fontSize: 25.0),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Image(height: 120.0, image: AssetImage("images/logo.png")
 //                        image: NetworkImage(
 //                            "http://metre.ddns.net/MetreGestao/javax.faces.resource/logo.png.xhtml?ln=img"),
-                             ),
-                             SizedBox(
-                               height: 50.0,
-                             ),
-                             TextFormField(
-                               controller: usuarioController,
-                               keyboardType: TextInputType.text,
-                               autofocus: true,
-                               decoration: InputDecoration(
-                                 labelText: "Usuário",
-                               ),
-                               validator: (text) {
-                                 if (text.isEmpty) {
-                                   return "Informe o Usuário!";
-                                 }
-                               },
-                             ),
-                             TextFormField(
-                               controller: senhaController,
-                               obscureText: true,
-                               decoration: InputDecoration(
-                                 labelText: "Senha",
-                               ),
-                               validator: (text) {
-                                 if (text.isEmpty) {
-                                   return "Informe a Senha!";
-                                 }
-                               },
-                             ),
-                           ],
-                         ),
-                         Row(
-                           mainAxisAlignment: MainAxisAlignment.end,
-                           children: <Widget>[
-                             FlatButton(
-                               padding: EdgeInsets.all(0),
-                               onPressed: () => _goToPage(RecuperarSenhaScreen()),
-                               child: Text(
-                                 "Esqueci a senha",
-                                 textAlign: TextAlign.right,
-                                 style: TextStyle(
-                                     fontSize: 15.0,
-                                     fontWeight: FontWeight.w500,
-                                     color: Colors.blueAccent),
-                               ),
-                             )
-                           ],
-                         ),
-                         ButtomDefault("Entrar", _login)
-                       ],
-                     ),
-                   ));
-             }
-         )
-     ),
+                      ),
+                      SizedBox(
+                        height: 50.0,
+                      ),
+                      TextFormField(
+                        controller: usuarioController,
+                        keyboardType: TextInputType.text,
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          labelText: "Usuário",
+                        ),
+                        validator: (text) {
+                          if (text.isEmpty) {
+                            return "Informe o Usuário!";
+                          }
+                        },
+                      ),
+                      TextFormField(
+                        controller: senhaController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: "Senha",
+                        ),
+                        validator: (text) {
+                          if (text.isEmpty) {
+                            return "Informe a Senha!";
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      FlatButton(
+                        padding: EdgeInsets.all(0),
+                        onPressed: () => _goToPage(RecuperarSenhaScreen()),
+                        child: Text(
+                          "Esqueci a senha",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.blueAccent),
+                        ),
+                      )
+                    ],
+                  ),
+                  ButtomDefault("Entrar", _login)
+                ],
+              ),
+            )
+        ))
     );
   }
 }
