@@ -9,4 +9,10 @@ class Operador{
     this.idOperador=json["idOperador"];
     this.nome=json["nome"];
   }
+
+  @override
+  String toString() {
+    return 'Operador{idOperador: $idOperador, nome: $nome}';
+  }
+
 }

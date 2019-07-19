@@ -71,7 +71,7 @@ class CaixaModel extends Model {
     var response = await http.post('$_urlApi$_path', body: jsonEncode({"auth_token": _token}), headers: requestHeaders);
     if(response.statusCode==200){
       var jsonData = json.decode(utf8.decode(response.bodyBytes));
-      List<Operador> lista = List<Operador>();
+      List<Operador> lista = List();
       for(var c in jsonData){
         lista.add(Operador.fromJson(c));
       }

@@ -45,6 +45,15 @@ class _FilterDialogState extends State<FilterDialog> {
       return items;
     }
 
+    _getDropDownItens(dynamic snapshot){
+      List<DropdownMenuItem<int>> list=List();
+      for(var v in snapshot){
+        Operador op = v;
+        list.add(DropdownMenuItem<int>(value: op.idOperador,child: Text(op.nome),));
+      }
+      return list;
+    }
+
     return AlertDialog(
       title: const Text("Informe os Filtros",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
@@ -60,18 +69,13 @@ class _FilterDialogState extends State<FilterDialog> {
                       return DropdownButton(
                         isExpanded: true,
                         value: caixaModel.idOperador,
-                        items: snapshot.data
-                            .map<DropdownMenuItem<Operador>>((Operador op) {
-                          return DropdownMenuItem<Operador>(
-                            value: op,
-                            child: Text(op.nome),
-                          );
-                        }).toList(),
+                        items: _getDropDownItens(snapshot.data),
                         hint: Text("Selecione  operador"),
-                        onChanged: (operador) {
+                        onChanged: (oper) {
                           setState(() {
-                            Operador operadorSelecionado = operador;
-                            caixaModel.idOperador= operadorSelecionado.idOperador;
+                            print(oper);
+                            caixaModel.idOperador = oper;
+
                           });
                         },
                       );
