@@ -19,15 +19,22 @@ class HomePage extends StatelessWidget {
                   print(snapshot.error.toString());
                   return Text("Erro ao listar os caixas!");
                 }
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator(),);
-                } else {
-                  return ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return CardCaixaAberto(snapshot.data[index]);
-                      }
-                  );
+                switch (snapshot.connectionState) {
+                  case ConnectionState.done:
+                    if (snapshot.hasData && snapshot.data.length > 0) {
+                      return ListView.builder(
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return CardCaixaAberto(snapshot.data[index]);
+                          });
+                    }
+                    return Text("Lista Vazia");
+                  case ConnectionState.none:
+                    return Text("Erro de Conexão!");
+                  default:
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
                 }
               }
           ),

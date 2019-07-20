@@ -15,7 +15,7 @@ class VendaBruta extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             CardItemTotalizer(
-                descricao: "Detalhamento da Venda Bruta",
+                descricao: "Venda Bruta",
                 decorationTitle: TextStyle(
                     fontSize: 18.0, fontWeight: FontWeight.w600),
                 icone: const Icon(

@@ -19,37 +19,18 @@ class CardItemHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Column(
-          children: <Widget>[
-            Container(
-              child: Text(
-                tituloLeft,
-                style: decoration == null ? defaultTextStyle : decoration,
-              ),
-            ),
-          ],
+        Text(
+          tituloLeft,
+          style: decoration == null ? defaultTextStyle : decoration,
         ),
-        Column(
-          children: <Widget>[
-            Container(
-              child:
-              tituloCenter==null? Text(""):
-              Text(
-                tituloCenter,
-                style: decoration == null ? defaultTextStyle : decoration,
-              ),
-            ),
-          ],
+        tituloCenter==null? Text(""):
+        Text(
+          tituloCenter,
+          style: decoration == null ? defaultTextStyle : decoration,
         ),
-        Column(
-          children: <Widget>[
-            Container(
-              child: Text(
-                tituloRight,
-                style: decoration == null ? defaultTextStyle : decoration,
-              ),
-            ),
-          ],
+        Text(
+          tituloRight,
+          style: decoration == null ? defaultTextStyle : decoration,
         ),
       ],
     );

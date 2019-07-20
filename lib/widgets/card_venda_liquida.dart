@@ -27,14 +27,14 @@ class VendaLiquida extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     CardItemTotalizer(
-                        descricao: "Detalhamento da Venda Liquida",
-                        decorationTitle: TextStyle(
-                            fontSize: 18.0, fontWeight: FontWeight.w600),
+                        descricao: "Venda Liquida",
                         icone: const Icon(
                           Icons.list,
                           color: Colors.deepOrangeAccent,
                           size: 30.0,
-                        )),
+                        ),
+                      decorationTitle: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.w600),),
                     SizedBox(
                       height: 10.0,
                       child: Divider(

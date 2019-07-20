@@ -9,15 +9,6 @@ import 'package:flutter_app/widgets/card_venda_liquida.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class VendasPorForma extends StatelessWidget {
-
-  double _totaliza(List<TotalizadorForma> totais){
-    double total=0.00;
-    for(var t in totais.map((tot)=>tot.calculado)){
-      total=total+t;
-    }
-    return total;
-  }
-
   @override
   Widget build(BuildContext context) {
     CaixaModel caixaModel=ScopedModel.of<CaixaModel>(context);
@@ -57,7 +48,7 @@ class VendasPorForma extends StatelessWidget {
                         ),
 
                         Divider(color: Colors.grey,),
-                        CardItemTotalizer(descricao: "Total:", valor: _totaliza(totalizadores), decorationTitle: TextStyle(
+                        CardItemTotalizer(descricao: "Total:", valor: totalizadores.map((tot)=>tot.calculado).reduce((totalCalculado, valor)=> totalCalculado+valor), decorationTitle: TextStyle(
                             fontSize: 15.0, fontWeight: FontWeight.w600),
                           decorationValue: TextStyle(
                               fontSize: 15.0, fontWeight: FontWeight.w600),)

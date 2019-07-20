@@ -19,12 +19,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final UsuarioModel usuarioModel;
-
-  _HomeScreenState(this.usuarioModel);
-
+  CaixaModel caixaModel;
   int _selectedIndex = 0;
 
-  CaixaModel caixaModel;
+  _HomeScreenState(this.usuarioModel);
 
   void _onItemTapped(int index) {
     setState(() {
@@ -40,9 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final CaixaModel caixaModel =
-    CaixaModel(usuarioModel.usuarioLogado.authToken);
-
+    caixaModel=CaixaModel(usuarioModel.usuarioLogado.authToken);
     _openFilterModal() {
       showDialog(
           context: context,
@@ -60,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //          automaticallyImplyLeading: false,
               centerTitle: true,
               backgroundColor: Colors.deepOrangeAccent,
-              title: Text('Metre Analize'),
+              title: Text(_selectedIndex==0?"Caixas Abertos":"Caixas Encerrados"),
               actions: _selectedIndex == 0
                   ? []
                   : <Widget>[

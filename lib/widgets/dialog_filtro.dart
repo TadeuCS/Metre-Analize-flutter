@@ -69,7 +69,13 @@ class _FilterDialogState extends State<FilterDialog> {
                       return DropdownButton(
                         isExpanded: true,
                         value: caixaModel.idOperador,
-                        items: _getDropDownItens(snapshot.data),
+                        items: snapshot.data
+                            .map<DropdownMenuItem<int>>((Operador op) {
+                          return DropdownMenuItem<int>(
+                            value: op.idOperador,
+                            child: Text(op.nome),
+                          );
+                        }).toList(),
                         hint: Text("Selecione  operador"),
                         onChanged: (oper) {
                           setState(() {

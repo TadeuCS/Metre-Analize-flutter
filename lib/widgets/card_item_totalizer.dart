@@ -23,66 +23,50 @@ class CardItemTotalizer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     Widget _widgetLeft() {
-      return Column(
-        children: <Widget>[
-          Container(
-            width: valorCenter!=null?100.0:null,
-            alignment: Alignment.centerLeft,
-            child: Text(
-              descricao,
-              style:
-                  decorationTitle == null ? defaultTextStyle : decorationTitle,
-            ),
-          ),
-        ],
+      return Expanded(
+        flex: valorCenter==null?2:1,
+        child: Text(
+          descricao,
+          textAlign: TextAlign.left,
+          style: decorationTitle == null ? defaultTextStyle : decorationTitle,
+        ),
       );
     }
 
     Widget _widgetCenter() {
-        return Column(
-          children: <Widget>[
-            Container(
-              width: valorCenter!=null?80.0:null,
-              alignment: Alignment.centerRight,
-              child: valorCenter==null?Text(""):
-              Text(
-                tipoColumnCenter==int?
-                OUtils.OnlyInteger(valorCenter):
-                OUtils.formataMoeda(valorCenter),
+      return valorCenter == null
+          ? Text("")
+          : Expanded(
+              child: Text(
+                tipoColumnCenter == int
+                    ? OUtils.OnlyInteger(valorCenter)
+                    : OUtils.formataMoeda(valorCenter),
+                style: decorationValue == null
+                    ? defaultTextStyle
+                    : decorationValue,
+                textAlign: TextAlign.right,
+              ),
+            );
+    }
+
+    Widget _widgetRight() {
+      return Expanded(
+          child: Container(
+        alignment: Alignment.centerRight,
+        child: icone != null
+            ? icone
+            : Text(
+                OUtils.formataMoeda(valor),
+                textAlign: TextAlign.right,
                 style: decorationValue == null
                     ? defaultTextStyle
                     : decorationValue,
               ),
-            ),
-          ],
-        );
-
-    }
-
-    Widget _widgetRight() {
-      return Column(
-        children: <Widget>[
-          Container(
-            width: valorCenter!=null?80.0:null,
-            alignment: Alignment.centerRight,
-            child: icone != null
-                ? icone
-                : Text(
-                    OUtils.formataMoeda(valor),
-                    textAlign: TextAlign.right,
-                    style: decorationValue == null
-                        ? defaultTextStyle
-                        : decorationValue,
-                  ),
-          ),
-        ],
-      );
+      ));
     }
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[_widgetLeft(), _widgetCenter(), _widgetRight()],
     );
   }

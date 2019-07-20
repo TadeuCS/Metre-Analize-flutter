@@ -28,10 +28,11 @@ class CaixaModel extends Model {
   String _token;
 
   //variáveis temporárias
-  List<TotalizadorCaixa> caixasFiltrados=List();
+//  List<TotalizadorCaixa> caixasFiltrados=List();
   TotalizadorCaixa caixaSelecionado;
 
   final String _urlApi="http://metre.ddns.net/services/analize/";
+//  final String _urlApi="http://192.168.100.10:8080/services/analize/";
   final Map<String, String> requestHeaders = {
     'content-type': 'application/json'
   };
@@ -54,6 +55,7 @@ class CaixaModel extends Model {
   Future<List<String>> listTurnos() async {
     _path="caixa/listar/turnos/";
     var response = await http.post('$_urlApi$_path', body: jsonEncode({"auth_token": _token}), headers: requestHeaders);
+    print('listTurnos: ${response.statusCode}');
     if(response.statusCode==200){
       var jsonData = json.decode(utf8.decode(response.bodyBytes));
       List<String> lista = List<String>();
@@ -69,6 +71,7 @@ class CaixaModel extends Model {
   Future<List<Operador>> listOperadores() async {
     _path="caixa/listar/operadores/";
     var response = await http.post('$_urlApi$_path', body: jsonEncode({"auth_token": _token}), headers: requestHeaders);
+    print('listOperadores: ${response.statusCode}');
     if(response.statusCode==200){
       var jsonData = json.decode(utf8.decode(response.bodyBytes));
       List<Operador> lista = List();
@@ -85,7 +88,7 @@ class CaixaModel extends Model {
   Future<List<TotalizadorCaixa>> listCaixasAbertos() async {
     _path="caixa/listar/abertos/";
     var response = await http.post('$_urlApi$_path', body: json.encode({"auth_token":_token}), headers: requestHeaders);
-
+    print('listCaixasAbertos: ${response.statusCode}');
     if(response.statusCode==200){
       var jsonData = json.decode(utf8.decode(response.bodyBytes));
       List<TotalizadorCaixa> lista = List<TotalizadorCaixa>();
@@ -107,12 +110,13 @@ class CaixaModel extends Model {
     _path="caixa/listar/encerrados/";
     Map parametros = {
       "auth_token": _token,
-//      "turno": turno,
-//      "id_operador": idOperador,
+      "turno": turno,
+      "id_operador": idOperador,
       "dt_ini": dtIni!=null?OUtils.formataDataSQL(dtIni):OUtils.formataDataSQL(DateTime(2019,04,11)),
       "dt_fin": dtFin!=null?OUtils.formataDataSQL(dtFin):OUtils.formataDataSQL(DateTime(2019,04,11))
     };
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
+    print('listCaixasEncerrados: ${response.statusCode}');
     if(response.statusCode==200){
       var jsonData = json.decode(utf8.decode(response.bodyBytes));
       List<TotalizadorCaixa> lista = List<TotalizadorCaixa>();
@@ -136,6 +140,7 @@ class CaixaModel extends Model {
       "id_caixa": idCaixa,
     };
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
+    print('getCaixa: ${response.statusCode}');
     if (response.statusCode == 200) {
       TotalizadorCaixa caixa = json.decode(response.body).cast<TotalizadorCaixa>();
       return caixa;
@@ -153,6 +158,7 @@ class CaixaModel extends Model {
       "id_caixa": idCaixa,
     };
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
+    print('listTotalizadorFormas: ${response.statusCode}');
     if (response.statusCode == 200) {
       var jsonData = json.decode(utf8.decode(response.bodyBytes));
       List<TotalizadorForma> lista = List<TotalizadorForma>();
@@ -178,6 +184,7 @@ class CaixaModel extends Model {
       "id_caixa": idCaixa,
     };
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
+    print('listTotalizadorModulos: ${response.statusCode}');
     if (response.statusCode == 200) {
       TotalizadorModulo modulos = json.decode(response.body).cast<TotalizadorModulo>();
       return modulos;
@@ -195,6 +202,7 @@ class CaixaModel extends Model {
       "id_caixa": idCaixa,
     };
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
+    print('listTotalizadorVendaLiquida: ${response.statusCode}');
     if (response.statusCode == 200) {
       var jsonData = json.decode(utf8.decode(response.bodyBytes));
       return TotalizadorVendaLiquida.fromJson(jsonData);
@@ -212,9 +220,18 @@ class CaixaModel extends Model {
       "id_caixa": idCaixa,
     };
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
+    print('listTotalizadorAtendente: ${response.statusCode}');
     if (response.statusCode == 200) {
-      List<TotalizadorAtendente> vendasPorAtendentes = json.decode(response.body).cast<List<TotalizadorAtendente>>();
-      return vendasPorAtendentes;
+      List<TotalizadorAtendente> lista = List<TotalizadorAtendente>();
+      var jsonData = json.decode(utf8.decode(response.bodyBytes));
+      for(var c in jsonData){
+        try{
+          lista.add(TotalizadorAtendente.fromJson(c));
+        }catch(e){
+          print(e);
+        }
+      }
+      return lista;
     } else {
       print("Request failed with status: ${response.statusCode}.");
       return null;
@@ -231,6 +248,7 @@ class CaixaModel extends Model {
       "qtde_limit": qtde_limit
     };
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
+    print('listTotalizadorPorProdutos: ${response.statusCode}');
     if (response.statusCode == 200) {
       List<VendasPorProduto> vendasPorProdutos = json.decode(response.body).cast<List<VendasPorProduto>>();
       return vendasPorProdutos;
@@ -250,6 +268,7 @@ class CaixaModel extends Model {
       "qtde_limit": qtde_limit
     };
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
+    print('listTotalizadorPorGrupos: ${response.statusCode}');
     if (response.statusCode == 200) {
       List<VendasPorGrupo> vendasPorGrupos = json.decode(response.body).cast<List<VendasPorGrupo>>();
       return vendasPorGrupos;
@@ -269,6 +288,7 @@ class CaixaModel extends Model {
       "qtde_limit": qtde_limit
     };
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
+    print('listTotalizadorPorSubGrupos: ${response.statusCode}');
     if (response.statusCode == 200) {
       List<VendasPorSubGrupo> vendasPorSubGrupos = json.decode(response.body).cast<List<VendasPorSubGrupo>>();
       return vendasPorSubGrupos;
@@ -286,6 +306,7 @@ class CaixaModel extends Model {
       "id_caixa": idCaixa,
     };
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
+    print('listTotalizadorPorHorario: ${response.statusCode}');
     if (response.statusCode == 200) {
       List<VendasPorHorario> vendasPorSubGrupos = json.decode(response.body).cast<List<VendasPorHorario>>();
       return vendasPorSubGrupos;
