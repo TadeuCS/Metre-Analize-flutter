@@ -4,6 +4,7 @@ import 'package:flutter_app/model/UsuarioModel.dart';
 import 'package:flutter_app/pojos/UsuarioPojo.dart';
 import 'package:flutter_app/screens/home_screen.dart';
 import 'package:flutter_app/screens/passwordRecuver_screen.dart';
+import 'package:flutter_app/util/Session.dart';
 import 'package:flutter_app/widgets/button_default.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -19,21 +20,26 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController usuarioController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
 
-  UsuarioModel _userModel= UsuarioModel();
+  Session session = Session();
+
+
+  @override
+  void initState() {
+    super.initState();
+    session.usuarioModel=UsuarioModel();
+    usuarioController.text="administrador";
+    senhaController.text="olivetadmin";
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    _goToPage(Widget novaPage) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => novaPage));
-    }
-
     _login() async{
       if (_formKey.currentState.validate()) {
-            UsuarioPojo usuarioLogado = await _userModel.login(usuarioController.text, senhaController.text);
+            UsuarioPojo usuarioLogado = await session.usuarioModel.login(usuarioController.text, senhaController.text);
             if (usuarioLogado != null) {
-              _goToPage(HomeScreen(_userModel));
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => HomeScreen()));
             } else {
               _scarffoldKey.currentState.showSnackBar(SnackBar(
                   backgroundColor: Color.fromRGBO(247, 118, 118, 1),
@@ -47,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
         key: _scarffoldKey,
         body: ScopedModel(
-            model: _userModel,
+            model: session.usuarioModel,
             child: SingleChildScrollView(
             padding: const EdgeInsets.all(15.0),
             child: Form(
@@ -108,7 +114,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: <Widget>[
                       FlatButton(
                         padding: EdgeInsets.all(0),
-                        onPressed: () => _goToPage(RecuperarSenhaScreen()),
+                        onPressed: () {
+                          Navigator.push(
+                              context, MaterialPageRoute(builder: (context) => RecuperarSenhaScreen()));
+                        },
                         child: Text(
                           "Esqueci a senha",
                           textAlign: TextAlign.right,
