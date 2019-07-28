@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/widgets/button_default.dart';
+import 'package:flutter_app/widgets/button_raised.dart';
 
 class RecuperarSenhaScreen extends StatefulWidget {
   @override

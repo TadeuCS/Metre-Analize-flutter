@@ -37,8 +37,8 @@ class CaixaModel extends Model {
     'content-type': 'application/json'
   };
 
-  static CaixaModel of(BuildContext context) =>
-      ScopedModel.of<CaixaModel>(context);
+//  static CaixaModel of(BuildContext context) =>
+//      ScopedModel.of<CaixaModel>(context);
   
   CaixaModel(this._token);
 
@@ -250,8 +250,16 @@ class CaixaModel extends Model {
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     print('listTotalizadorPorProdutos: ${response.statusCode}');
     if (response.statusCode == 200) {
-      List<VendasPorProduto> vendasPorProdutos = json.decode(response.body).cast<List<VendasPorProduto>>();
-      return vendasPorProdutos;
+      List<VendasPorProduto> lista = List<VendasPorProduto>();
+      var jsonData = json.decode(utf8.decode(response.bodyBytes));
+      for(var c in jsonData){
+        try{
+          lista.add(VendasPorProduto.fromJson(c));
+        }catch(e){
+          print(e);
+        }
+      }
+      return lista;
     } else {
       print("Request failed with status: ${response.statusCode}.");
       return null;
@@ -270,8 +278,16 @@ class CaixaModel extends Model {
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     print('listTotalizadorPorGrupos: ${response.statusCode}');
     if (response.statusCode == 200) {
-      List<VendasPorGrupo> vendasPorGrupos = json.decode(response.body).cast<List<VendasPorGrupo>>();
-      return vendasPorGrupos;
+      List<VendasPorGrupo> lista = List<VendasPorGrupo>();
+      var jsonData = json.decode(utf8.decode(response.bodyBytes));
+      for(var c in jsonData){
+        try{
+          lista.add(VendasPorGrupo.fromJson(c));
+        }catch(e){
+          print(e);
+        }
+      }
+      return lista;
     } else {
       print("Request failed with status: ${response.statusCode}.");
       return null;
@@ -290,8 +306,16 @@ class CaixaModel extends Model {
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     print('listTotalizadorPorSubGrupos: ${response.statusCode}');
     if (response.statusCode == 200) {
-      List<VendasPorSubGrupo> vendasPorSubGrupos = json.decode(response.body).cast<List<VendasPorSubGrupo>>();
-      return vendasPorSubGrupos;
+      List<VendasPorSubGrupo> lista = List<VendasPorSubGrupo>();
+      var jsonData = json.decode(utf8.decode(response.bodyBytes));
+      for(var c in jsonData){
+        try{
+          lista.add(VendasPorSubGrupo.fromJson(c));
+        }catch(e){
+          print(e);
+        }
+      }
+      return lista;
     } else {
       print("Request failed with status: ${response.statusCode}.");
       return null;

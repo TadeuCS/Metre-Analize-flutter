@@ -3,7 +3,7 @@ import 'package:flutter_app/model/CaixaModel.dart';
 import 'package:flutter_app/pojos/TotalizadorCaixa.dart';
 import 'package:flutter_app/screens/venda_bruta_screen.dart';
 import 'package:flutter_app/util/OUtils.dart';
-import 'package:flutter_app/widgets/button_default.dart';
+import 'package:flutter_app/widgets/button_raised.dart';
 import 'package:flutter_app/widgets/card_item_header.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
 import 'package:scoped_model/scoped_model.dart';

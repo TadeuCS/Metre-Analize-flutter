@@ -1,31 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/model/CaixaModel.dart';
+import 'package:flutter_app/pojos/VendasPorProduto.dart';
+import 'package:flutter_app/widgets/button_circle.dart';
 import 'package:flutter_app/widgets/card_item_header.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
 import 'package:flutter_app/widgets/card_venda_bruta.dart';
 import 'package:flutter_app/widgets/card_venda_liquida.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class VendasPorProdutos extends StatelessWidget {
-  List<Widget> lista =List();
+  List<Widget> lista = List();
 
-
-  VendasPorProdutos(){
+  VendasPorProdutos() {
     _listProdutos();
   }
 
-  List<Widget> _listProdutos(){
-    for(int i=1;i<=10;i++){
-        lista.add(CardItemTotalizer(
-          descricao: 'Produto $i',
-          valorCenter: 1,
-          tipoColumnCenter: int,
-          valor: 10.0,
-        )
-      );
+  List<Widget> _listProdutos() {
+    for (int i = 1; i <= 10; i++) {
+      lista.add(CardItemTotalizer(
+        descricao: 'Produto $i',
+        valorCenter: 1,
+        tipoColumnCenter: int,
+        valor: 10.0,
+      ));
     }
     return lista;
   }
+
   @override
   Widget build(BuildContext context) {
+    CaixaModel caixaModel = ScopedModel.of<CaixaModel>(context);
     return SingleChildScrollView(
       padding: EdgeInsets.all(0),
       child: Column(
@@ -33,49 +37,100 @@ class VendasPorProdutos extends StatelessWidget {
           VendaBruta(),
           VendaLiquida(),
           Card(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: <Widget>[
-                    CardItemTotalizer(
-                        descricao: "Vendas por Produtos",
-                        decorationTitle: TextStyle(
-                            fontSize: 18.0, fontWeight: FontWeight.w600),
-                        icone: const Icon(
-                          Icons.expand_more,
-                          color: Colors.deepOrangeAccent,
-                          size: 30.0,
-                        )),
-                    SizedBox(
-                      height: 10.0,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: <Widget>[
+                  CardItemTotalizer(
+                      descricao: "Vendas por Produtos",
+                      decorationTitle: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.w600),
+                      icone: const Icon(
+                        Icons.expand_more,
+                        color: Colors.deepOrangeAccent,
+                        size: 30.0,
+                      )),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(child: ButtonCircle("Top 5", (){}),),
+                        Expanded(child: ButtonCircle("Top 10", (){}),),
+                        Expanded(child: ButtonCircle("Top 15", (){}),),
+                        Expanded(child: ButtonCircle("Top 20", (){}),),
+                      ],
                     ),
-                    CardItemHeader(
-                        tituloLeft: "Produto",
-                        tituloCenter: "Quantidade",
-                        tituloRight: "Total"),
-                    Divider(
-                      color: Colors.grey,
-                    ),
-                    Column(
-                      children: _listProdutos()
-                    ),
-                    Divider(
-                      color: Colors.grey,
-                    ),
-                    CardItemTotalizer(
-                      descricao: "Total:",
-                      valorCenter: 15.0,
-                      tipoColumnCenter: int,
-                      valor: 500.0,
-                      decorationTitle:
-                          TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
-                      decorationValue:
-                          TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
-                    )
-                  ],
-                ),
+                  ),
+                  CardItemHeader(
+                      tituloLeft: "Produto",
+                      tituloCenter: "Quantidade",
+                      tituloRight: "Total"),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  FutureBuilder(
+                      future: caixaModel.listTotalizadorPorProdutos(
+                          caixaModel.caixaSelecionado.idCaixa, 0, 5),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          print(snapshot.error);
+                          return Text("Erro ao listar as Vendas por Produtos");
+                        }
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.done:
+                            if (snapshot.hasData && snapshot.data.length > 0) {
+                              List<VendasPorProduto> produtos = snapshot.data;
+                              return Column(
+                                children: <Widget>[
+                                  Column(
+                                    children: produtos
+                                        .map((produto) => CardItemTotalizer(
+                                              descricao: produto.descricao,
+                                              valorCenter: produto.quantidade,
+                                              valor: produto.total,
+                                              tipoColumnCenter: int,
+                                            ))
+                                        .toList(),
+                                  ),
+                                  Divider(
+                                    color: Colors.grey,
+                                  ),
+                                  CardItemTotalizer(
+                                    descricao: "Total:",
+                                    valorCenter: produtos
+                                        .map((p) => p.quantidade)
+                                        .reduce((qtdeTotal, qtde) =>
+                                            qtdeTotal + qtde),
+                                    tipoColumnCenter: int,
+                                    valor: produtos.map((p) => p.total).reduce(
+                                        (valorTotal, valor) =>
+                                            valorTotal + valor),
+                                    decorationTitle: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w600),
+                                    decorationValue: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              );
+                            }
+                            return Text("Lista Vazia");
+                          case ConnectionState.none:
+                            return Text("Erro de Conexão!");
+                          default:
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                        }
+                      }),
+                ],
               ),
             ),
+          ),
         ],
       ),
     );
