@@ -36,10 +36,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
     _login() async{
       if (_formKey.currentState.validate()) {
+            /*
+              *tratar para na usuarioModel retornar só um boolean se está liberado o acesso.
+                e assim se liberado enviar para home.
+              *Limpar para não vir preenchido automaticamente com os dados do usuário administrador.
+              *Ao logar preenchendo os dados de outro usuário, substituir os dados do usuario na
+                memoria do celualar do usuário.
+              *
+             */
             UsuarioPojo usuarioLogado = await session.usuarioModel.login(usuarioController.text, senhaController.text);
             if (usuarioLogado != null) {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => HomeScreen()));
+              Navigator.pushReplacementNamed(context, "/home");
             } else {
               _scarffoldKey.currentState.showSnackBar(SnackBar(
                   backgroundColor: Color.fromRGBO(247, 118, 118, 1),
@@ -115,8 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       FlatButton(
                         padding: EdgeInsets.all(0),
                         onPressed: () {
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => RecuperarSenhaScreen()));
+                          Navigator.pushNamed(context, "/recovery");
                         },
                         child: Text(
                           "Esqueci a senha",

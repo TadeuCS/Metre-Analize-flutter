@@ -6,13 +6,10 @@ import 'package:flutter_app/pages/vendas_por_grupos.dart';
 import 'package:flutter_app/pages/vendas_por_modulo.dart';
 import 'package:flutter_app/pages/vendas_por_produtos.dart';
 import 'package:flutter_app/pages/vendas_por_subgrupos.dart';
+import 'package:flutter_app/util/Session.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class DetalhamentoVendaBruta extends StatelessWidget {
-
-  final CaixaModel caixaModel;
-
-  DetalhamentoVendaBruta(this.caixaModel);
+class VendaBruta extends StatelessWidget {
 
   PageController _pageController = PageController();
   int _paginaSelecionada = 0;
@@ -67,7 +64,7 @@ class DetalhamentoVendaBruta extends StatelessWidget {
           title: Text("Detalhamento do Caixa"),
         ),
         body: ScopedModel<CaixaModel>(
-          model: caixaModel,
+          model: Session().caixaModel,
           child: Container(
             padding: const EdgeInsets.all(10.0),
             child: PageView(

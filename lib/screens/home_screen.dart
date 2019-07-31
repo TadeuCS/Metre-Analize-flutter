@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/CaixaModel.dart';
-import 'package:flutter_app/screens/login_screen.dart';
 import 'package:flutter_app/util/Session.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -16,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _indexTab = 0;
-  String _usuarioLogado = Session().usuarioModel.usuarioLogado.usuario;
 
   List<Widget> _pagesSwap = <Widget>[
     HomePage(), //tab1
@@ -27,19 +25,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     Session().caixaModel =
         CaixaModel(Session().usuarioModel.usuarioLogado.authToken);
+
+    _changeTab(int index) {
+      setState(() {
+        _indexTab = index;
+      });
+    }
+
     _openFilterModal() {
       showDialog(
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return FilterDialog(Session().caixaModel);
+            return FilterDialog();
           });
-    }
-
-    changeTab(int index) {
-      setState(() {
-        _indexTab = index;
-      });
     }
 
     return ScopedModel<CaixaModel>(
@@ -57,9 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(
                           height: 5.0,
                         ),
-//                        Text('Metre Analize',
-//                          textAlign: TextAlign.center,
-//                          style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w500, fontSize: 28.0),),
                         CircleAvatar(
                           minRadius: 30,
                           child: Icon(
@@ -70,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundColor: Colors.white,
                         ),
                         Text(
-                          'Bem Vindo: $_usuarioLogado',
+                          'Bem Vindo: ${Session().usuarioModel.usuarioLogado.usuario}',
                           textAlign: TextAlign.left,
                           style: TextStyle(color: Colors.white, fontSize: 18.0),
                         )
@@ -85,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     leading: Icon(Icons.blur_on),
                     selected: _indexTab == 0,
                     onTap: () {
-                      changeTab(0);
+                      _changeTab(0);
                       Navigator.pop(context);
                     },
                   ),
@@ -94,32 +90,35 @@ class _HomeScreenState extends State<HomeScreen> {
                     leading: Icon(Icons.blur_off),
                     selected: _indexTab == 1,
                     onTap: () {
-                      changeTab(1);
+                      _changeTab(1);
                       Navigator.pop(context);
                     },
                   ),
-//          ListTile(
-//            title: Text('Configurações'),
-//            onTap: () {
-//              // Update the state of the app.
-//              // ...
-//            },
-//          ),
+                  ListTile(
+                    title: Text('Configurações'),
+                    onTap: () {
+                      // Update the state of the app.
+                      // ...
+                    },
+                  ),
                   ListTile(
                     title: Text('Sair'),
                     leading: Icon(Icons.power_settings_new),
                     onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
+                      /*
+                        * Tratar para ao fazer logoff limpar os dados do usuário
+                        * salvos na memória do celular, e limpar as variáveis salvas
+                        * na Session().
+                       */
+                      Session().usuarioModel=null;
+                      Session().caixaModel=null;
+                      Navigator.pushReplacementNamed(context, "/login");
                     },
                   ),
                 ],
               ),
             ),
             appBar: AppBar(
-//          automaticallyImplyLeading: false,
               centerTitle: true,
               backgroundColor: Colors.deepOrangeAccent,
               title:
@@ -147,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
               currentIndex: _indexTab,
               selectedItemColor: Colors.amber[800],
-              onTap: changeTab,
+              onTap: _changeTab,
             )));
   }
 }

@@ -53,6 +53,7 @@ class _RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
                 height: 100.0,
               ),
               TextFormField(
+                autofocus: true,
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
                 decoration: InputDecoration(
