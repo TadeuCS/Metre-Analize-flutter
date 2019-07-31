@@ -10,4 +10,9 @@ class TotalizadorModulo{
   TotalizadorModulo(this.totalizadorMesa, this.totalizadorBalcao,
       this.totalizadorDelivery);
 
+  TotalizadorModulo.fromJson(Map<String, dynamic> json){
+    this.totalizadorMesa = TotalizadorMesa.fromJson(json["totalizadorMesa"]);
+    this.totalizadorBalcao = TotalizadorBalcao.fromJson(json["totalizadorBalcao"]);
+    this.totalizadorDelivery = TotalizadorDelivery.fromJson(json["totalizadorDelivery"]);
+  }
 }

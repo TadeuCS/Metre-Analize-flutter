@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pojos/TotalizadorBalcao.dart';
+import 'package:flutter_app/pojos/TotalizadorDelivery.dart';
+import 'package:flutter_app/pojos/TotalizadorMesa.dart';
+import 'package:flutter_app/pojos/TotalizadorModulo.dart';
 import 'package:flutter_app/widgets/card_item_header.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
 
 class CouselVendasPorModulos extends StatelessWidget {
+  final TotalizadorModulo _totalizadorModulo;
+
+  CouselVendasPorModulos(this._totalizadorModulo);
+
   @override
   Widget build(BuildContext context) {
     return _buildCarousel(context, 0);
@@ -10,9 +18,16 @@ class CouselVendasPorModulos extends StatelessWidget {
 
   Widget _buildCarousel(BuildContext context, int carouselIndex) {
     List<Widget> itensCarousel = List();
-    itensCarousel.add(_vendasNoBalcao());
-    itensCarousel.add(_vendasNaMesa());
-    itensCarousel.add(_vendasNoDelivery());
+    if(_totalizadorModulo.totalizadorBalcao.totalVendido>0) {
+      itensCarousel.add(_vendasNoBalcao(_totalizadorModulo.totalizadorBalcao));
+    }
+    if(_totalizadorModulo.totalizadorMesa.totalVenda>0) {
+      itensCarousel.add(_vendasNaMesa(_totalizadorModulo.totalizadorMesa));
+    }
+    if(_totalizadorModulo.totalizadorDelivery.totalPedidos>0) {
+      itensCarousel
+          .add(_vendasNoDelivery(_totalizadorModulo.totalizadorDelivery));
+    }
 
     return SizedBox(
       height: 210,
@@ -34,7 +49,7 @@ class CouselVendasPorModulos extends StatelessWidget {
     );
   }
 
-  Widget _vendasNaMesa() {
+  Widget _vendasNaMesa(TotalizadorMesa totalizadorMesa) {
     return Column(
       children: <Widget>[
         CardItemTotalizer(
@@ -50,27 +65,37 @@ class CouselVendasPorModulos extends StatelessWidget {
           color: Colors.grey,
         ),
         CardItemTotalizer(
+          descricao: "Total Vendas",
+          valor: totalizadorMesa.totalVenda,
+        ),
+        CardItemTotalizer(
           descricao: "Quantidade Vendas",
-          valor: 80,
+          valor: totalizadorMesa.qtdeVendas + 0.0,
         ),
         CardItemTotalizer(
           descricao: "Quantidade Pessoas",
-          valor: 20,
+          valor: totalizadorMesa.qtdePessoas + 0.0,
         ),
         CardItemTotalizer(
           descricao: "Ticket Médio p/ Pessoa",
-          valor: 4.0,
+          valor: totalizadorMesa.qtdePessoas > 0
+              ? totalizadorMesa.totalVenda / totalizadorMesa.qtdePessoas
+              : 0,
+        ),
+        CardItemTotalizer(
+          descricao: "Taxa Serviço",
+          valor: totalizadorMesa.taxaServico,
         ),
         CardItemTotalizer(
           descricao: "Couvert",
-          valor: 35.0,
+          valor: totalizadorMesa.couvert,
         ),
         Divider(
           color: Colors.grey,
         ),
         CardItemTotalizer(
           descricao: "Total:",
-          valor: 500.0,
+          valor: totalizadorMesa.totalVenda,
           decorationTitle:
               TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
           decorationValue:
@@ -80,7 +105,7 @@ class CouselVendasPorModulos extends StatelessWidget {
     );
   }
 
-  Widget _vendasNoBalcao() {
+  Widget _vendasNoBalcao(TotalizadorBalcao totalizadorBalcao) {
     return Column(
       children: <Widget>[
         CardItemTotalizer(
@@ -97,18 +122,20 @@ class CouselVendasPorModulos extends StatelessWidget {
         ),
         CardItemTotalizer(
           descricao: "Quantidade Vendas",
-          valor: 80,
+          valor: totalizadorBalcao.qtdePedidos.roundToDouble(),
         ),
         CardItemTotalizer(
           descricao: "Média de Vendas",
-          valor: 20,
+          valor: totalizadorBalcao.qtdePedidos > 0
+              ? totalizadorBalcao.totalVendido / totalizadorBalcao.qtdePedidos
+              : 0,
         ),
         Divider(
           color: Colors.grey,
         ),
         CardItemTotalizer(
           descricao: "Total:",
-          valor: 500.0,
+          valor: totalizadorBalcao.totalVendido,
           decorationTitle:
               TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
           decorationValue:
@@ -118,7 +145,7 @@ class CouselVendasPorModulos extends StatelessWidget {
     );
   }
 
-  Widget _vendasNoDelivery() {
+  Widget _vendasNoDelivery(TotalizadorDelivery totalizadorDelivery) {
     return Column(
       children: <Widget>[
         CardItemTotalizer(
@@ -140,61 +167,18 @@ class CouselVendasPorModulos extends StatelessWidget {
         Divider(
           color: Colors.grey,
         ),
-        CardItemTotalizer(
-          descricao: "Tadeu",
-          valorCenter: 85,
-          tipoColumnCenter: int,
-          valor: 85,
+        Column(
+          children: totalizadorDelivery.totalizadorEntregador
+              .map(
+                (tot) => CardItemTotalizer(
+                  descricao: tot.nome,
+                  valorCenter: tot.qtde.roundToDouble(),
+                  tipoColumnCenter: int,
+                  valor: tot.taxa,
+                ),
+              )
+              .toList(),
         ),
-        CardItemTotalizer(
-          descricao: "João Palo",
-          valorCenter: 85,
-          tipoColumnCenter: int,
-          valor: 85,
-        ),
-        CardItemTotalizer(
-          descricao: "Renato",
-          valorCenter: 85,
-          tipoColumnCenter: int,
-          valor: 85,
-        ),
-        CardItemTotalizer(
-          descricao: "Marvin",
-          valorCenter: 85,
-          tipoColumnCenter: int,
-          valor: 85,
-        ),
-        CardItemTotalizer(
-          descricao: "Luis",
-          valorCenter: 85,
-          tipoColumnCenter: int,
-          valor: 85,
-        ),
-        CardItemTotalizer(
-          descricao: "Igor",
-          valorCenter: 85,
-          tipoColumnCenter: int,
-          valor: 85,
-        ),
-        CardItemTotalizer(
-          descricao: "James",
-          valorCenter: 85,
-          tipoColumnCenter: int,
-          valor: 85,
-        ),
-        CardItemTotalizer(
-          descricao: "Daniel",
-          valorCenter: 85,
-          tipoColumnCenter: int,
-          valor: 85,
-        ),
-        CardItemTotalizer(
-          descricao: "Rafael",
-          valorCenter: 85,
-          tipoColumnCenter: int,
-          valor: 85,
-        ),
-
         Divider(
           color: Colors.grey,
         ),

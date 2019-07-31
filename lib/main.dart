@@ -5,10 +5,9 @@ void main() => runApp(MaterialApp(
       title: "Metre Analize",
       home: LoginScreen(),
       theme: ThemeData(
-//          accentColor: Colors.deepOrangeAccent,
+          hintColor: Colors.white,
           primaryColor: Colors.deepOrange,
-          buttonColor: Colors.deepOrange,
-//        focusColor: Colors.grey
+          buttonColor: Colors.deepOrange
       ),
       debugShowCheckedModeBanner: false,
     ));

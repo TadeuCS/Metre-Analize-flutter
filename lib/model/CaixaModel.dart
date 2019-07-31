@@ -186,8 +186,8 @@ class CaixaModel extends Model {
     var response = await http.post('$_urlApi$_path', body: jsonEncode(parametros), headers: requestHeaders);
     print('listTotalizadorModulos: ${response.statusCode}');
     if (response.statusCode == 200) {
-      TotalizadorModulo modulos = json.decode(response.body).cast<TotalizadorModulo>();
-      return modulos;
+      var jsonData = json.decode(utf8.decode(response.bodyBytes));
+      return TotalizadorModulo.fromJson(jsonData);
     } else {
       print("Request failed with status: ${response.statusCode}.");
       return null;
