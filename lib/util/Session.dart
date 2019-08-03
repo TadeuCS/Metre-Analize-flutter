@@ -4,14 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Session {
 
-//  String apiUrl = "http://metre.ddns.net/services/analize/";
+  UsuarioModel usuarioModel;
+  CaixaModel caixaModel;
   String apiUrl;
   SharedPreferences prefs;
   final Map<String, String> requestHeaders = {
     'content-type': 'application/json'
   };
-  UsuarioModel usuarioModel;
-  CaixaModel caixaModel;
 
   Session._privateConstructor();
 

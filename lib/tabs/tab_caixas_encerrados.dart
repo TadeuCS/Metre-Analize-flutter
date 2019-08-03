@@ -3,7 +3,7 @@ import 'package:flutter_app/model/CaixaModel.dart';
 import 'package:flutter_app/widgets/card_caixa_fechado.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class CaixasPage extends StatelessWidget {
+class CaixaEncerradoTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<CaixaModel>(builder: (context, child, model) {
