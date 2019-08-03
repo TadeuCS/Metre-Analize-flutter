@@ -12,16 +12,16 @@ class UsuarioModel extends Model{
 //      ScopedModel.of<UsuarioModel>(context);
 
    //faz login e retorna a key de autenticação da API
-  Future<UsuarioPojo> login(String usuario, String senha) async{
+  Future<bool> login(String usuario, String senha) async{
     var response = await http.get('${Session().apiUrl}usuario/login/?user=${usuario}&pass=${senha}');
     print(response.statusCode);
     if(response.statusCode==200){
       usuarioLogado=UsuarioPojo(usuario, usuario, jsonDecode(response.body)["auth_token"], null, true);
       notifyListeners();
-      return usuarioLogado;
+      return true;
     }else {
       print("Request failed with status: ${response.statusCode}.");
-      return null;
+      return false;
     }
   }
 

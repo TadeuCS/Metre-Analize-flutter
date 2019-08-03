@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/util/OUtils.dart';
-import 'package:intl/intl.dart';
 
 class CardItemTotalizer extends StatelessWidget {
   final String descricao;

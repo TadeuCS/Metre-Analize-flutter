@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListTile(
                     title: Text('Sair'),
                     leading: Icon(Icons.power_settings_new),
-                    onTap: () {
+                    onTap: () async {
                       /*
                         * Tratar para ao fazer logoff limpar os dados do usuário
                         * salvos na memória do celular, e limpar as variáveis salvas
@@ -112,6 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
                        */
                       Session().usuarioModel=null;
                       Session().caixaModel=null;
+                      await Session().prefs.remove("usuario");
+                      await Session().prefs.remove("senha");
                       Navigator.pushReplacementNamed(context, "/login");
                     },
                   ),

@@ -17,8 +17,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scarffoldKey = GlobalKey();
 
-  TextEditingController usuarioController = TextEditingController();
-  TextEditingController senhaController = TextEditingController();
+  TextEditingController _usuarioController = TextEditingController();
+  TextEditingController _senhaController = TextEditingController();
 
   Session session = Session();
 
@@ -27,8 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     session.usuarioModel=UsuarioModel();
-    usuarioController.text="administrador";
-    senhaController.text="olivetadmin";
+//    _usuarioController.text="administrador";
+//    _senhaController.text="olivetadmin";
   }
 
   @override
@@ -44,8 +44,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 memoria do celualar do usuário.
               *
              */
-            UsuarioPojo usuarioLogado = await session.usuarioModel.login(usuarioController.text, senhaController.text);
-            if (usuarioLogado != null) {
+            bool autorizado = await session.usuarioModel.login(_usuarioController.text, _senhaController.text);
+            if (autorizado) {
+              await Session().prefs.setString("usuario", _usuarioController.text);
+              await Session().prefs.setString("senha", _senhaController.text);
               Navigator.pushReplacementNamed(context, "/home");
             } else {
               _scarffoldKey.currentState.showSnackBar(SnackBar(
@@ -90,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 50.0,
                       ),
                       TextFormField(
-                        controller: usuarioController,
+                        controller: _usuarioController,
                         keyboardType: TextInputType.text,
                         autofocus: true,
                         decoration: InputDecoration(
@@ -103,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                       ),
                       TextFormField(
-                        controller: senhaController,
+                        controller: _senhaController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: "Senha",

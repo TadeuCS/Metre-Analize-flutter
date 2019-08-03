@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/model/UsuarioModel.dart';
 import 'package:flutter_app/util/Session.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -14,6 +16,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _validaLogin() async {
+    if (Session() == null) {
+      Session session = Session();
+    }
+    if (Session().usuarioModel == null) {
+      Session().usuarioModel = UsuarioModel();
+    }
     /*
       * Ao logar se não tiver a url do gestão salvas na memória do aparelho,
         abrir tela para configurar lendo um QRcode gerado pelo Metre SG do cliente.
@@ -21,11 +29,25 @@ class _SplashScreenState extends State<SplashScreen> {
         no aparelho do usuário, se os dados estiverem preenchidos tentar efetuar
         o login, e redirecionar para home se login com sucesso.
     */
-    await Future.delayed(Duration(seconds: 2));
-    if (Session() == null || Session().usuarioModel == null) {
+    Session().prefs = await SharedPreferences.getInstance();
+    String usuario = await Session().prefs.getString("usuario");
+    String senha = await Session().prefs.getString("senha");
+
+    if (Session().apiUrl == null || Session().apiUrl.isEmpty) {
+      print('vai pra config');
+      Navigator.pushReplacementNamed(context, "/configuracao");
+    } else if (usuario == null || senha == null) {
+      print('vai pro login');
       Navigator.pushReplacementNamed(context, "/login");
     } else {
-      Navigator.pushReplacementNamed(context, "/home");
+      bool autorizado = await Session().usuarioModel.login(usuario, senha);
+      if (autorizado) {
+        print('vai pra home');
+        Navigator.pushReplacementNamed(context, "/home");
+      } else {
+        print('vai pra login2');
+        Navigator.pushReplacementNamed(context, "/login");
+      }
     }
   }
 

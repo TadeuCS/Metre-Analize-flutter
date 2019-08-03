@@ -252,7 +252,7 @@ packages:
     source: hosted
     version: "2.1.4"
   intl:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: intl
       url: "https://pub.dartlang.org"
@@ -276,13 +276,6 @@ packages:
     dependency: transitive
     description:
       name: json_annotation
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.3.0"
-  json_serializable:
-    dependency: "direct dev"
-    description:
-      name: json_serializable
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.0"
@@ -377,6 +370,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.4"
+  qrcode_reader:
+    dependency: "direct main"
+    description:
+      name: qrcode_reader
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.4"
   quiver:
     dependency: transitive
     description:
@@ -417,13 +417,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  source_gen:
-    dependency: transitive
-    description:
-      name: source_gen
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.4+3"
   source_span:
     dependency: transitive
     description:
