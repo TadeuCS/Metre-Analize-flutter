@@ -22,18 +22,22 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
 
+  @override
+  void initState() {
+    Session().caixaModel =
+        CaixaModel(Session().usuarioModel.usuarioLogado.authToken);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Session().caixaModel =
-        CaixaModel(Session().usuarioModel.usuarioLogado.authToken);
     return ScopedModel<CaixaModel>(
         model: Session().caixaModel,
         child: Scaffold(
             drawer: _drawer(context, _changeTab),
             appBar: AppBar(
               centerTitle: true,
-              backgroundColor: Colors.deepOrangeAccent,
+              backgroundColor: Theme.of(context).primaryColor,
               title:
                   Text(_indexTab == 0 ? "Caixas Abertos" : "Caixas Encerrados"),
               actions: _indexTab == 0

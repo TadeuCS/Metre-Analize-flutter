@@ -11,6 +11,7 @@ void main() => runApp(MaterialApp(
       theme: ThemeData(
           hintColor: Colors.white,
           primaryColor: Colors.deepOrange,
+          iconTheme: IconThemeData(color: Colors.deepOrangeAccent),
           buttonColor: Colors.deepOrange),
       initialRoute: '/',
       routes: {

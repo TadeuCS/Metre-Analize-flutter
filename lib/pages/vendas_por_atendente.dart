@@ -39,7 +39,6 @@ class VendasPorAtendente extends StatelessWidget {
                                     fontSize: 18.0, fontWeight: FontWeight.w600),
                                 icone: const Icon(
                                   Icons.people,
-                                  color: Colors.deepOrangeAccent,
                                   size: 30.0,
                                 )),
                             SizedBox(

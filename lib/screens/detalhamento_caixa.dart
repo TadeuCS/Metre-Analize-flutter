@@ -20,7 +20,7 @@ class DetalhamentoCaixa extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          backgroundColor: Colors.deepOrangeAccent,
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text("Detalhamento do Caixa"),
         ),
         body: ScopedModel<CaixaModel>(

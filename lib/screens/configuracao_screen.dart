@@ -13,6 +13,11 @@ class _ConfiguracaoScreenState extends State<ConfiguracaoScreen> {
   @override
   void initState() {
     super.initState();
+    try{
+      _urlApi.text=Session().prefs.get("urlApi");
+    }catch(e){
+      e.toString();
+    }
   }
 
   @override
@@ -26,28 +31,38 @@ class _ConfiguracaoScreenState extends State<ConfiguracaoScreen> {
         padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(
-              "Informe o URL da API ou\n leia um QRcode de configuração",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20, top: 10),
+              child: Text(
+                "Informe o URL da API ou\n leia um QRcode de configuração",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              ),
             ),
             TextField(
+              autofocus: true,
+              decoration: InputDecoration(
+                labelText: "URL servidor do Metre Analize",
+                border: OutlineInputBorder(),
+              ),
               controller: _urlApi,
-              enabled: false,
             ),
-            IconButton(
-                icon: Icon(Icons.center_focus_weak),
-                onPressed: () {
-                  scan();
-                }),
-            IconButton(icon: Icon(Icons.clear), onPressed: (){
-              _urlApi.clear();
-            })
+            Expanded(
+              child: IconButton(
+                  icon: Icon(Icons.center_focus_weak),
+                  iconSize: 60,
+                  onPressed: () {
+                    scan();
+                  }),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton:
+      _urlApi.text.trim().isEmpty? Container():
+      FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           child: Icon(Icons.check),
           onPressed: () {
