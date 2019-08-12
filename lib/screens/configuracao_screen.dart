@@ -8,6 +8,7 @@ class ConfiguracaoScreen extends StatefulWidget {
 
 class _ConfiguracaoScreenState extends State<ConfiguracaoScreen> {
   final TextEditingController _urlApi = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -39,9 +40,11 @@ class _ConfiguracaoScreenState extends State<ConfiguracaoScreen> {
                 onPressed: () {
                   scan();
                 }),
-            IconButton(icon: Icon(Icons.clear), onPressed: (){
-              _urlApi.clear();
-            })
+            IconButton(
+                icon: Icon(Icons.clear),
+                onPressed: () {
+                  _urlApi.clear();
+                })
           ],
         ),
       ),
@@ -49,15 +52,19 @@ class _ConfiguracaoScreenState extends State<ConfiguracaoScreen> {
   }
 
   Future scan() async {
-       await QRCodeReader()
-          .setAutoFocusIntervalInMs(200) // default 5000
-          .setForceAutoFocus(true) // default false
-          .setTorchEnabled(true) // default false
-          .setHandlePermissions(true) // default true
-          .setExecuteAfterPermissionGranted(true) // default true
-          .scan()
-          .then((text){
-         _urlApi.text=text;
-       });
+    await QRCodeReader()
+        .setAutoFocusIntervalInMs(200) // default 5000
+        .setForceAutoFocus(true) // default false
+        .setTorchEnabled(true) // default false
+        .setHandlePermissions(true) // default true
+        .setExecuteAfterPermissionGranted(true) // default true
+        .scan()
+        .then((text) {
+      text = text.replaceAll("/services/analize/", "");
+      text = (!text.startsWith("http://") && !text.startsWith("https://")
+          ? 'http://$text/services/analize/'
+          : '$text/services/analize/');
+      _urlApi.text = text;
+    });
   }
 }
