@@ -12,11 +12,12 @@ class FilterDialog extends StatefulWidget {
 }
 
 class _FilterDialogState extends State<FilterDialog> {
-  CaixaModel caixaModel = Session().caixaModel;
+  CaixaModel caixaModel;
 
   @override
   void initState() {
     super.initState();
+    caixaModel= Session().caixaModel;
     if (caixaModel.dtIni == null) {
       caixaModel.dtIni = DateTime.now();
       caixaModel.dtFin = DateTime.now();
@@ -30,27 +31,6 @@ class _FilterDialogState extends State<FilterDialog> {
         initialDate: caixaModel.dtIni,
         firstDate: DateTime(2019),
         lastDate: DateTime(2025));
-
-    List<DropdownMenuItem<String>> getDropDownMenuItems(List<dynamic> lista) {
-      List<DropdownMenuItem<String>> items = new List();
-      for (String item in lista) {
-        items.add(new DropdownMenuItem(value: item, child: new Text(item)));
-      }
-      return items;
-    }
-
-    _getDropDownItens(dynamic snapshot) {
-      List<DropdownMenuItem<int>> list = List();
-      for (var v in snapshot) {
-        Operador op = v;
-        list.add(DropdownMenuItem<int>(
-          value: op.idOperador,
-          child: Text(op.nome),
-        ));
-      }
-      return list;
-    }
-
     return AlertDialog(
       title: const Text("Informe os Filtros",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),

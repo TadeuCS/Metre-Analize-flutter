@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/util/Session.dart';
 import 'package:qrcode_reader/qrcode_reader.dart';
 
 class ConfiguracaoScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _ConfiguracaoScreenState extends State<ConfiguracaoScreen> {
         centerTitle: true,
       ),
       body: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -40,31 +41,38 @@ class _ConfiguracaoScreenState extends State<ConfiguracaoScreen> {
                 onPressed: () {
                   scan();
                 }),
-            IconButton(
-                icon: Icon(Icons.clear),
-                onPressed: () {
-                  _urlApi.clear();
-                })
+            IconButton(icon: Icon(Icons.clear), onPressed: (){
+              _urlApi.clear();
+            })
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          child: Icon(Icons.check),
+          onPressed: () {
+            setState(() {
+              Session().prefs.setString("urlApi", _urlApi.text);
+              Navigator.pushReplacementNamed(context, "/");
+            });
+          }),
     );
   }
 
   Future scan() async {
-    await QRCodeReader()
-        .setAutoFocusIntervalInMs(200) // default 5000
-        .setForceAutoFocus(true) // default false
-        .setTorchEnabled(true) // default false
-        .setHandlePermissions(true) // default true
-        .setExecuteAfterPermissionGranted(true) // default true
-        .scan()
-        .then((text) {
-      text = text.replaceAll("/services/analize/", "");
-      text = (!text.startsWith("http://") && !text.startsWith("https://")
-          ? 'http://$text/services/analize/'
-          : '$text/services/analize/');
-      _urlApi.text = text;
-    });
+       await QRCodeReader()
+          .setAutoFocusIntervalInMs(200) // default 5000
+          .setForceAutoFocus(true) // default false
+          .setTorchEnabled(true) // default false
+          .setHandlePermissions(true) // default true
+          .setExecuteAfterPermissionGranted(true) // default true
+          .scan()
+          .then((text){
+         text = text.replaceAll("/services/analize/", "");
+         text = (!text.startsWith("http://") && !text.startsWith("https://")
+             ? 'http://$text/services/analize/'
+             : '$text/services/analize/');
+         _urlApi.text = text;
+       });
   }
 }

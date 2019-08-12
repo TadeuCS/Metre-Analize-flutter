@@ -8,24 +8,15 @@ import 'package:flutter_app/widgets/card_venda_bruta.dart';
 import 'package:flutter_app/widgets/card_venda_liquida.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class VendasPorSubGrupos extends StatelessWidget {
-  List<Widget> lista =List();
+class VendasPorSubGrupos extends StatefulWidget {
+  @override
+  _VendasPorSubGruposState createState() => _VendasPorSubGruposState();
+}
 
+class _VendasPorSubGruposState extends State<VendasPorSubGrupos> {
+  int _limitResultados=5;
+  int _maxLength;
 
-  VendasPorProdutos(){
-    _listProdutos();
-  }
-
-  List<Widget> _listProdutos(){
-    for(int i=1;i<=10;i++){
-      lista.add(CardItemTotalizer(
-        descricao: 'Subgrupo $i',
-        valor: 10.0,
-      )
-      );
-    }
-    return lista;
-  }
   @override
   Widget build(BuildContext context) {
     CaixaModel caixaModel = ScopedModel.of<CaixaModel>(context);
@@ -56,10 +47,10 @@ class VendasPorSubGrupos extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     child: Row(
                       children: <Widget>[
-                        Expanded(child: ButtonCircle("Top 5", (){}),),
-                        Expanded(child: ButtonCircle("Top 10", (){}),),
-                        Expanded(child: ButtonCircle("Top 15", (){}),),
-                        Expanded(child: ButtonCircle("Top 20", (){}),),
+                        Expanded(child: ButtonCircle("Top 5", ()=>_showTop(5)),),
+                        Expanded(child: ButtonCircle("Top 10", ()=>_showTop(10)),),
+                        Expanded(child: ButtonCircle("Top 15", ()=>_showTop(15)),),
+                        Expanded(child: ButtonCircle("Todos",()=> _showTop(10000)),),
                       ],
                     ),
                   ),
@@ -71,7 +62,7 @@ class VendasPorSubGrupos extends StatelessWidget {
                   ),
                   FutureBuilder(
                       future: caixaModel.listTotalizadorPorSubGrupos(
-                          caixaModel.caixaSelecionado.idCaixa, 0, 5),
+                          caixaModel.caixaSelecionado.idCaixa),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           print(snapshot.error);
@@ -83,10 +74,11 @@ class VendasPorSubGrupos extends StatelessWidget {
                             if (snapshot.hasData && snapshot.data.length > 0) {
                               List<VendasPorSubGrupo> subGrupos =
                                   snapshot.data;
+                              _maxLength=subGrupos.length;
                               return Column(
                                 children: <Widget>[
                                   Column(
-                                    children: subGrupos
+                                    children: subGrupos.sublist(0, _limitResultados)
                                         .map((subgrupo) => CardItemTotalizer(
                                       descricao: subgrupo.descricao,
                                       valor: subgrupo.total,
@@ -123,5 +115,11 @@ class VendasPorSubGrupos extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _showTop(int limitSelecionado) {
+    setState(() {
+      _limitResultados = (limitSelecionado<_maxLength?limitSelecionado:_maxLength);
+    });
   }
 }

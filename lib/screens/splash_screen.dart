@@ -16,37 +16,46 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _validaLogin() async {
+    //cria sessão se não existir uma
     if (Session() == null) {
+      print('Nova Session');
       Session session = Session();
     }
+    // Instancia um usuárioModel se não existir um na sessão para receber o
+    // usuário logado.
     if (Session().usuarioModel == null) {
+      print('Novo UsuarioModel');
       Session().usuarioModel = UsuarioModel();
     }
-    /*
-      * Ao logar se não tiver a url do gestão salvas na memória do aparelho,
-        abrir tela para configurar lendo um QRcode gerado pelo Metre SG do cliente.
-      * Fazer aqui a função de carregar os dados do ultimo login do json salvo
-        no aparelho do usuário, se os dados estiverem preenchidos tentar efetuar
-        o login, e redirecionar para home se login com sucesso.
-    */
+
+    //carrega informações gravadas na memória do celular
     Session().prefs = await SharedPreferences.getInstance();
     String usuario = await Session().prefs.getString("usuario");
     String senha = await Session().prefs.getString("senha");
+    String urlApi = await Session().prefs.getString("urlApi");
 
-    if (Session().apiUrl == null || Session().apiUrl.isEmpty) {
+    //valida se a url da API está configurada.
+    if (urlApi == null) {
       print('vai pra config');
       Navigator.pushReplacementNamed(context, "/configuracao");
-    } else if (usuario == null || senha == null) {
-      print('vai pro login');
-      Navigator.pushReplacementNamed(context, "/login");
     } else {
-      bool autorizado = await Session().usuarioModel.login(usuario, senha);
-      if (autorizado) {
-        print('vai pra home');
-        Navigator.pushReplacementNamed(context, "/home");
-      } else {
-        print('vai pra login2');
+      Session().apiUrl = urlApi;
+      print('URL API: ${Session().apiUrl}');
+      //valida usuário já logado.
+      if (usuario == null || senha == null) {
+        print('vai pro login');
         Navigator.pushReplacementNamed(context, "/login");
+      } else {
+        bool autorizado = await Session().usuarioModel.login(usuario, senha);
+        //se usuário estiver com senha inválida ou não existir, direciona
+        // para o login
+        if (autorizado) {
+          print('vai pra home');
+          Navigator.pushReplacementNamed(context, "/home");
+        } else {
+          print('vai pra login2');
+          Navigator.pushReplacementNamed(context, "/login");
+        }
       }
     }
   }

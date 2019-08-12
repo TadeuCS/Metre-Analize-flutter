@@ -8,25 +8,15 @@ import 'package:flutter_app/widgets/card_venda_bruta.dart';
 import 'package:flutter_app/widgets/card_venda_liquida.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class VendasPorProdutos extends StatelessWidget {
-  List<Widget> lista = List();
+class VendasPorProdutos extends StatefulWidget {
 
-  VendasPorProdutos() {
-    _listProdutos();
-  }
+  @override
+  _VendasPorProdutosState createState() => _VendasPorProdutosState();
+}
 
-  List<Widget> _listProdutos() {
-    for (int i = 1; i <= 10; i++) {
-      lista.add(CardItemTotalizer(
-        descricao: 'Produto $i',
-        valorCenter: 1,
-        tipoColumnCenter: int,
-        valor: 10.0,
-      ));
-    }
-    return lista;
-  }
-
+class _VendasPorProdutosState extends State<VendasPorProdutos> {
+  int _limitResultados=5;
+  int maxLength;
   @override
   Widget build(BuildContext context) {
     CaixaModel caixaModel = ScopedModel.of<CaixaModel>(context);
@@ -57,10 +47,10 @@ class VendasPorProdutos extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     child: Row(
                       children: <Widget>[
-                        Expanded(child: ButtonCircle("Top 5", (){}),),
-                        Expanded(child: ButtonCircle("Top 10", (){}),),
-                        Expanded(child: ButtonCircle("Top 15", (){}),),
-                        Expanded(child: ButtonCircle("Top 20", (){}),),
+                        Expanded(child: ButtonCircle("Top 5", ()=>_showTop(5)),),
+                        Expanded(child: ButtonCircle("Top 10", ()=>_showTop(10)),),
+                        Expanded(child: ButtonCircle("Top 15", ()=>_showTop(15)),),
+                        Expanded(child: ButtonCircle("Todos", ()=>_showTop(10000)))
                       ],
                     ),
                   ),
@@ -73,7 +63,8 @@ class VendasPorProdutos extends StatelessWidget {
                   ),
                   FutureBuilder(
                       future: caixaModel.listTotalizadorPorProdutos(
-                          caixaModel.caixaSelecionado.idCaixa, 0, 5),
+                          caixaModel.caixaSelecionado.idCaixa
+                      ),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           print(snapshot.error);
@@ -83,10 +74,11 @@ class VendasPorProdutos extends StatelessWidget {
                           case ConnectionState.done:
                             if (snapshot.hasData && snapshot.data.length > 0) {
                               List<VendasPorProduto> produtos = snapshot.data;
+                              maxLength=produtos.length;
                               return Column(
                                 children: <Widget>[
                                   Column(
-                                    children: produtos
+                                    children: produtos.sublist(0, _limitResultados)
                                         .map((produto) => CardItemTotalizer(
                                               descricao: produto.descricao,
                                               valorCenter: produto.quantidade,
@@ -134,5 +126,10 @@ class VendasPorProdutos extends StatelessWidget {
         ],
       ),
     );
+  }
+  _showTop(int limitSelecionado) {
+    setState(() {
+      _limitResultados = (limitSelecionado<maxLength?limitSelecionado:maxLength);
+    });
   }
 }

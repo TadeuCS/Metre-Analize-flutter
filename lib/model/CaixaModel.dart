@@ -237,13 +237,13 @@ class CaixaModel extends Model {
   }
 
   //lista os totalizadores da venda liquida por Produtos
-  Future<List<VendasPorProduto>> listTotalizadorPorProdutos( int idCaixa, int pos_ini, int qtde_limit) async {
+  Future<List<VendasPorProduto>> listTotalizadorPorProdutos(@required int idCaixa) async {
     _path="vendas/produtos/";
     dynamic parametros = {
       "auth_token": _token,
       "id_caixa": idCaixa,
-      "pos_ini" : pos_ini,
-      "qtde_limit": qtde_limit
+      "pos_ini" : 0,
+      "qtde_limit": 10000
     };
     var response = await http.post('${Session().apiUrl}${_path}', body: jsonEncode(parametros), headers: Session().requestHeaders);
     print('listTotalizadorPorProdutos: ${response.statusCode}');
@@ -265,13 +265,13 @@ class CaixaModel extends Model {
   }
 
   //lista os totalizadores da venda liquida por grupos
-  Future<List<VendasPorGrupo>> listTotalizadorPorGrupos( int idCaixa, int pos_ini, int qtde_limit) async {
+  Future<List<VendasPorGrupo>> listTotalizadorPorGrupos( int idCaixa) async {
     _path="vendas/grupos/";
     dynamic parametros = {
       "auth_token": _token,
       "id_caixa": idCaixa,
-      "pos_ini" : pos_ini,
-      "qtde_limit": qtde_limit
+      "pos_ini" : 0,
+      "qtde_limit": 1000
     };
     var response = await http.post('${Session().apiUrl}${_path}', body: jsonEncode(parametros), headers: Session().requestHeaders);
     print('listTotalizadorPorGrupos: ${response.statusCode}');
@@ -293,13 +293,13 @@ class CaixaModel extends Model {
   }
 
   //lista os totalizadores da venda liquida por subgrupos
-  Future<List<VendasPorSubGrupo>> listTotalizadorPorSubGrupos( int idCaixa, int pos_ini, int qtde_limit) async {
+  Future<List<VendasPorSubGrupo>> listTotalizadorPorSubGrupos( int idCaixa) async {
     _path="vendas/subgrupos/";
     dynamic parametros = {
       "auth_token": _token,
       "id_caixa": idCaixa,
-      "pos_ini" : pos_ini,
-      "qtde_limit": qtde_limit
+      "pos_ini" : 0,
+      "qtde_limit": 1000
     };
     var response = await http.post('${Session().apiUrl}${_path}', body: jsonEncode(parametros), headers: Session().requestHeaders);
     print('listTotalizadorPorSubGrupos: ${response.statusCode}');

@@ -3,7 +3,7 @@ import 'package:flutter_app/model/CaixaModel.dart';
 import 'package:flutter_app/widgets/card_caixa_aberto.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class HomePage extends StatelessWidget {
+class CaixaAbertoTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {

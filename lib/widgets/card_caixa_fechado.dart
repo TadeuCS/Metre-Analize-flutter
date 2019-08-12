@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/CaixaModel.dart';
 import 'package:flutter_app/pojos/TotalizadorCaixa.dart';
-import 'package:flutter_app/screens/venda_bruta_screen.dart';
+import 'package:flutter_app/pojos/TotalizadorForma.dart';
+import 'package:flutter_app/screens/detalhamento_caixa.dart';
 import 'package:flutter_app/util/OUtils.dart';
 import 'package:flutter_app/util/Session.dart';
 import 'package:flutter_app/widgets/button_raised.dart';
@@ -20,9 +21,11 @@ class CardCaixaFechado extends StatelessWidget {
     _detalharVendaBruta(){
       Session().caixaModel=ScopedModel.of<CaixaModel>(context);
       Session().caixaModel.caixaSelecionado = this.caixa;
-      Navigator.push(context, MaterialPageRoute(builder: (context) => VendaBruta()));
+      Navigator.pushNamed(context, "/caixa");
     }
-
+    List<TotalizadorForma> totalizadoresPorForma=caixa.totalizadores
+        .where((tot)=>tot.calculado>0)
+        .toList();
     return Card(
       margin: const EdgeInsets.only(bottom: 15.0),
       child: Padding(
@@ -114,6 +117,30 @@ class CardCaixaFechado extends StatelessWidget {
                   TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
               decorationValue:
                   TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600)),
+
+        Container(
+          padding: const EdgeInsets.only(top: 15, bottom: 10),
+          child: CardItemTotalizer(
+            descricao: "Totalizador por Forma",
+            decorationTitle: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            icone: Icon(Icons.keyboard_arrow_down),),
+        ),
+          CardItemHeader(
+            tituloLeft: "Forma",
+            tituloCenter: "Valor Informado",
+            tituloRight: "Valor Conferido",
+          ),
+          Column(
+            children: totalizadoresPorForma
+                .map((tot)=>
+                CardItemTotalizer(descricao: tot.descricao, tipoColumnCenter: double, valorCenter: tot.informado, valor:  tot.calculado,)).toList(),
+          ),
+          Divider(),
+          CardItemTotalizer(
+            descricao: "Total:",
+            tipoColumnCenter: double,
+            valorCenter: totalizadoresPorForma.map((tot)=>tot.informado).reduce((total, valor)=>total+valor),
+            valor: totalizadoresPorForma.map((tot)=>tot.calculado).reduce((total, valor)=>total+valor),),
           ButtomDefault("Detalhar Venda Bruta", _detalharVendaBruta)
         ]),
       ),
