@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "804809446313",
+    "firebase_url": "https://metreanalize.firebaseio.com",
+    "project_id": "metreanalize",
+    "storage_bucket": "metreanalize.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804809446313:android:2e7a2da0b63c19fffd2ab8",
+        "android_client_info": {
+          "package_name": "com.tcs.metreanalize"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804809446313-14o0mum51a31bmjur8jr3j42gi6uduoi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-HaYlt2CdthYM-Tl1iEbZaDyJK9ECJjk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804809446313-14o0mum51a31bmjur8jr3j42gi6uduoi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

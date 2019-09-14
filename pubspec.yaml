@@ -29,6 +29,7 @@ dependencies:
   shared_preferences: ^0.5.3+4
   qrcode_reader: ^0.4.4
   flutter_launcher_icons: ^0.7.2+1
+  onesignal_flutter: ^2.0.0
 
 dev_dependencies:
   build_runner: ^1.0.0

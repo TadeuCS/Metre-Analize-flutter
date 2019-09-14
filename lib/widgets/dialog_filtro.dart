@@ -4,7 +4,6 @@ import 'package:flutter_app/pojos/Operador.dart';
 import 'package:flutter_app/pojos/Turno.dart';
 import 'package:flutter_app/util/OUtils.dart';
 import 'package:flutter_app/util/Session.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 class FilterDialog extends StatefulWidget {
   @override

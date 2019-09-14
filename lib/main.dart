@@ -8,6 +8,7 @@ import 'package:flutter_app/screens/detalhamento_caixa.dart';
 
 void main() => runApp(MaterialApp(
       title: "Metre Analize",
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           hintColor: Colors.white,
           primaryColor: Colors.deepOrange,
@@ -22,5 +23,4 @@ void main() => runApp(MaterialApp(
         '/home': (context) => HomeScreen(),
         '/caixa': (context) => DetalhamentoCaixa(),
       },
-      debugShowCheckedModeBanner: false,
     ));

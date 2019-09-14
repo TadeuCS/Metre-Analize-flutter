@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/CaixaModel.dart';
-import 'package:flutter_app/pojos/TotalizadorCaixa.dart';
 import 'package:flutter_app/pojos/TotalizadorVendaLiquida.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
 import 'package:scoped_model/scoped_model.dart';

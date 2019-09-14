@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/UsuarioModel.dart';
+import 'package:flutter_app/util/OneSignalUtils.dart';
 import 'package:flutter_app/util/Session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,6 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    OneSignalUtils().init();
     _validaLogin();
   }
 
@@ -19,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //cria sessão se não existir uma
     if (Session() == null) {
       print('Nova Session');
-      Session session = Session();
+      new Session();
     }
     // Instancia um usuárioModel se não existir um na sessão para receber o
     // usuário logado.

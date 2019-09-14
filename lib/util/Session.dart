@@ -7,6 +7,7 @@ class Session {
   UsuarioModel usuarioModel;
   CaixaModel caixaModel;
   String apiUrl;
+  String oneSignalUserID;
   SharedPreferences prefs;
   final Map<String, String> requestHeaders = {
     'content-type': 'application/json'
