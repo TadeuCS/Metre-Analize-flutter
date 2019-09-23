@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
         bool autorizado = await Session().usuarioModel.login(usuario, senha);
         //se usuário estiver com senha inválida ou não existir, direciona
         // para o login
-        if (autorizado) {
+        if (autorizado != null && autorizado) {
           print('vai pra home');
           Navigator.pushReplacementNamed(context, "/home");
         } else {
