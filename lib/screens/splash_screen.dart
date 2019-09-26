@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/UsuarioModel.dart';
+import 'package:flutter_app/util/LocalNotificationUtils.dart';
 import 'package:flutter_app/util/OneSignalUtils.dart';
 import 'package:flutter_app/util/Session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     OneSignalUtils().init();
+    LocalNotificationUtils();
     _validaLogin();
   }
 
@@ -72,5 +74,9 @@ class _SplashScreenState extends State<SplashScreen> {
         )
       ],
     );
+  }
+
+  void LocalNotification(){
+
   }
 }
