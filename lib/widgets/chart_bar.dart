@@ -4,9 +4,23 @@ import 'package:charts_flutter/flutter.dart' as charts;
 
 class VendasPorHorario extends StatelessWidget {
 
-  List<charts.Series<Pollution, String>> _seriesData;
+  @override
+  Widget build(BuildContext context) {
+    List<charts.Series<Pollution, String>> _seriesData;
+    _generateData(_seriesData);
+    return Expanded(
+      child: charts.BarChart(
+        _seriesData,
+        animate: true,
+        barGroupingType: charts.BarGroupingType.grouped,
+        behaviors: [new charts.SeriesLegend()],
+        animationDuration: Duration(seconds: 1),
+      ),
+    );
+  }
+}
 
-  _generateData() {
+_generateData(List _seriesData) {
     var data1 = [
       new Pollution("18",  0),
       new Pollution("19",  150),
@@ -30,19 +44,6 @@ class VendasPorHorario extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: charts.BarChart(
-        _seriesData,
-        animate: true,
-        barGroupingType: charts.BarGroupingType.grouped,
-//behaviors: [new charts.SeriesLegend()],
-        animationDuration: Duration(seconds: 1),
-      ),
-    );
-  }
-}
 class Pollution {
   String place;
   int quantity;

@@ -9,18 +9,26 @@ import 'package:flutter_app/screens/detalhamento_caixa.dart';
 void main() => runApp(MaterialApp(
       title: "Metre Analize",
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          hintColor: Colors.white,
-          primaryColor: Colors.deepOrange,
-          iconTheme: IconThemeData(color: Colors.deepOrangeAccent),
-          buttonColor: Colors.deepOrange),
       initialRoute: '/',
-      routes: {
-        '/': (context) => SplashScreen(),
-        '/login': (context) => LoginScreen(),
-        '/recovery': (context) => RecuperarSenhaScreen(),
-        '/configuracao': (context) => ConfiguracaoScreen(),
-        '/home': (context) => HomeScreen(),
-        '/caixa': (context) => DetalhamentoCaixa(),
-      },
+      routes: getRoutes(),
+      theme: getTheme(),
     ));
+
+ThemeData getTheme() {
+  return ThemeData(
+        hintColor: Colors.white,
+        primaryColor: Colors.deepOrange,
+        iconTheme: IconThemeData(color: Colors.deepOrangeAccent),
+        buttonColor: Colors.deepOrange);
+}
+
+Map<String, WidgetBuilder> getRoutes() {
+  return {
+      '/': (context) => SplashScreen(),
+      '/login': (context) => LoginScreen(),
+      '/recovery': (context) => RecuperarSenhaScreen(),
+      '/configuracao': (context) => ConfiguracaoScreen(),
+      '/home': (context) => HomeScreen(),
+      '/caixa': (context) => DetalhamentoCaixa(),
+    };
+}

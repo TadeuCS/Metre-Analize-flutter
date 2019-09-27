@@ -39,7 +39,7 @@ class CardItemTotalizer extends StatelessWidget {
           : Expanded(
               child: Text(
                 tipoColumnCenter == int
-                    ? OUtils.OnlyInteger(valorCenter)
+                    ? OUtils.onlyInteger(valorCenter)
                     : OUtils.formataMoeda(valorCenter),
                 style: decorationValue == null
                     ? defaultTextStyle

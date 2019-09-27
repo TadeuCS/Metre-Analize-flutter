@@ -17,11 +17,8 @@ class _RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
         _scarffoldKey.currentState.showSnackBar(SnackBar(
             backgroundColor: Color.fromRGBO(0, 174, 155, 0.8),
             duration: Duration(seconds: 2),
-            content: Text('Email de Recuperação enviado com sucesso!'))
-        );
-         await Future.delayed(
-            Duration(seconds: 2)
-        );
+            content: Text('Email de Recuperação enviado com sucesso!')));
+        await Future.delayed(Duration(seconds: 2));
         Navigator.pop(context);
       }
     }
@@ -43,12 +40,10 @@ class _RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
               SizedBox(
                 height: 20.0,
               ),
-              Image(
-                height: 120.0,
-                image: AssetImage("images/logo.png")
+              Image(height: 120.0, image: AssetImage("images/logo.png")
 //                image: NetworkImage(
 //                    "http://metre.ddns.net/MetreGestao/javax.faces.resource/logo.png.xhtml?ln=img"),
-              ),
+                  ),
               SizedBox(
                 height: 100.0,
               ),
@@ -61,9 +56,9 @@ class _RecuperarSenhaScreenState extends State<RecuperarSenhaScreen> {
 //                  prefixIcon: Icon(Icons.alternate_email),
                 ),
                 validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return "Informe um email de recuperação!";
-                  }
+                  return value.trim().isEmpty
+                      ? "Informe um email de recuperação!"
+                      : null;
                 },
               ),
               ButtomDefault("Enviar Email", _recuperarSenha)

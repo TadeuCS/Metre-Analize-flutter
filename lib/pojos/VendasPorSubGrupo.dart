@@ -1,25 +1,15 @@
+
 import 'package:flutter_app/util/OUtils.dart';
 
 class VendasPorSubGrupo{
-  String _descricao;
-  double _total;
+  String descricao;
+  double total;
 
-  VendasPorSubGrupo(this._descricao, this._total);
+  VendasPorSubGrupo(this.descricao, this.total);
 
   VendasPorSubGrupo.fromJson(Map<String, dynamic> json){
-    this._descricao=json["descricao"];
-    this._total=OUtils.convertToDouble(json["total"]);
+    this.descricao=json["descricao"];
+    this.total= OUtils.convertToDouble(json["total"]);
   }
 
-  double get total => _total;
-
-  set total(double value) {
-    _total = value;
-  }
-
-  String get descricao => _descricao;
-
-  set descricao(String value) {
-    _descricao = value;
-  }
 }

@@ -4,6 +4,7 @@
 
     <!-- First, request the camera permission -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!--
       - IMPORTANT PART:

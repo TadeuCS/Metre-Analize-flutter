@@ -2,12 +2,12 @@ import 'package:flutter_app/pojos/TotalizadorForma.dart';
 import 'package:flutter_app/util/OUtils.dart';
 
 class TotalizadorCaixa{
-  int _idCaixa;
+  int idCaixa;
   String _situacao;
-  String _operador;
-  String _turno;
-  String _dtAbertura;
-  String _dtFechamento;
+  String operador;
+  String turno;
+  String dtAbertura;
+  String dtFechamento;
   double _totalEntradas;
   double _totalSaidas;
   double _saldo;
@@ -24,22 +24,22 @@ class TotalizadorCaixa{
   double _pagamentos;
   double _vales;
   double _trocoRetirado;
-  List<TotalizadorForma> _totalizadores=List();
+  List<TotalizadorForma> totalizadores=List();
 
-  TotalizadorCaixa(this._idCaixa, this._situacao, this._operador, this._turno,
-      this._dtAbertura, this._dtFechamento, this._totalEntradas,
+  TotalizadorCaixa(this.idCaixa, this._situacao, this.operador, this.turno,
+      this.dtAbertura, this.dtFechamento, this._totalEntradas,
       this._totalSaidas, this._saldo, this._trocoAbertura, this._trocoInserido,
       this._vendasBruta, this._recebimentos, this._suprimentos, this._sangrias,
       this._cancelamentos, this._estornos, this._pagamentos, this._vales,
-      this._trocoRetirado, this._totalizadores);
+      this._trocoRetirado, this.totalizadores);
 
   TotalizadorCaixa.fromJson(Map<String, dynamic> json){
-    this._idCaixa=json["idCaixa"];
-    this._situacao=json["situacao"];
-    this._operador=json["operador"];
-    this._turno=json["turno"];
-    this._dtAbertura=json["dtAbertura"];
-    this._dtFechamento=json["dtFechamento"];
+    this.idCaixa=json["idCaixa"];
+    this.situacao=json["situacao"];
+    this.operador=json["operador"];
+    this.turno=json["turno"];
+    this.dtAbertura=json["dtAbertura"];
+    this.dtFechamento=json["dtFechamento"];
     this._totalEntradas=OUtils.convertToDouble(json["totalEntradas"]);
     this._totalSaidas=OUtils.convertToDouble(json["totalSaidas"]);
     this._saldo=OUtils.convertToDouble(json["saldo"]);
@@ -56,15 +56,9 @@ class TotalizadorCaixa{
     this._trocoRetirado=OUtils.convertToDouble(json["trocoRetirado"]);
     if(json["totalizadores"]!=null) {
       for (var t in json["totalizadores"]) {
-        this._totalizadores.add(TotalizadorForma.fromJson(t));
+        this.totalizadores.add(TotalizadorForma.fromJson(t));
       }
     }
-  }
-
-  int get idCaixa => _idCaixa;
-
-  set idCaixa(int value) {
-    _idCaixa = value;
   }
 
   double get trocoRetirado => OUtils.convertToDouble(_trocoRetirado);
@@ -151,39 +145,9 @@ class TotalizadorCaixa{
     _totalEntradas = value;
   }
 
-  String get dtFechamento => _dtFechamento;
-
-  set dtFechamento(String value) {
-    _dtFechamento = value;
-  }
-
-  String get dtAbertura => _dtAbertura;
-
-  set dtAbertura(String value) {
-    _dtAbertura = value;
-  }
-
-  String get turno => _turno;
-
-  set turno(String value) {
-    _turno = value;
-  }
-
-  String get operador => _operador;
-
-  set operador(String value) {
-    _operador = value;
-  }
-
   String get situacao => _situacao==null?"":_situacao;
 
   set situacao(String value) {
     _situacao = value;
-  }
-
-  List<TotalizadorForma> get totalizadores => _totalizadores;
-
-  set totalizadores(List<TotalizadorForma> value) {
-    _totalizadores = value;
   }
 }

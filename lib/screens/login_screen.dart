@@ -105,9 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               labelText: "Usuário",
                             ),
                             validator: (valor) {
-                              if (valor.isEmpty) {
-                                return "Informe o Usuário!";
-                              }
+                              return valor.trim().isEmpty?"Informe o Usuário!":null;
                             },
                           ),
                           TextFormField(
@@ -117,9 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               labelText: "Senha",
                             ),
                             validator: (text) {
-                              if (text.isEmpty) {
-                                return "Informe a Senha!";
-                              }
+                              return text.trim().isEmpty?"Informe a Senha!":null;
                             },
                           ),
                         ],

@@ -20,7 +20,7 @@ class OneSignalUtils {
   }
 
   void _handleNotificationReceived(OSNotification notification) {
-    print(notification);
+    print('Notificação: $notification');
   }
 
   void getUserId() async {

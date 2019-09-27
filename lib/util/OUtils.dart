@@ -26,7 +26,7 @@ class OUtils{
     return formatter.format(valor);
   }
 
-  static String OnlyInteger(double valor){
+  static String onlyInteger(double valor){
     return valor.toInt().toString();
   }
 

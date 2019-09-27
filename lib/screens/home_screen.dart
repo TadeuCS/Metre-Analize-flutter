@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/CaixaModel.dart';
 import 'package:flutter_app/util/Session.dart';
-//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter_app/tabs/tab_caixas_abertos.dart';
 import 'package:flutter_app/tabs/tab_caixas_encerrados.dart';

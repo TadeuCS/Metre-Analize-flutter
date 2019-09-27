@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/UsuarioModel.dart';
-import 'package:flutter_app/util/LocalNotificationUtils.dart';
 import 'package:flutter_app/util/OneSignalUtils.dart';
 import 'package:flutter_app/util/Session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +14,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     OneSignalUtils().init();
-    LocalNotificationUtils();
     _validaLogin();
   }
 
@@ -34,9 +32,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
     //carrega informações gravadas na memória do celular
     Session().prefs = await SharedPreferences.getInstance();
-    String usuario = await Session().prefs.getString("usuario");
-    String senha = await Session().prefs.getString("senha");
-    String urlApi = await Session().prefs.getString("urlApi");
+    String usuario = Session().prefs.getString("usuario");
+    String senha = Session().prefs.getString("senha");
+    String urlApi = Session().prefs.getString("urlApi");
 
     //valida se a url da API está configurada.
     if (urlApi == null) {
@@ -74,9 +72,5 @@ class _SplashScreenState extends State<SplashScreen> {
         )
       ],
     );
-  }
-
-  void LocalNotification(){
-
   }
 }
