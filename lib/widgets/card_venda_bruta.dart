@@ -46,7 +46,7 @@ class VendaBruta extends StatelessWidget {
             ),
             CardItemTotalizer(
               descricao: "(=) Venda Liquida:",
-              valor: (caixa.vendasBruta-caixa.estornos-caixa.estornos),
+              valor: (caixa.vendasBruta-caixa.cancelamentos-caixa.estornos),
               decorationTitle: TextStyle(
                   fontSize: 18.0, fontWeight: FontWeight.w600),
               decorationValue: TextStyle(

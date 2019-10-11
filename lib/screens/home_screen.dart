@@ -15,12 +15,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _indexTab = 0;
 
-  List<Widget> _pagesSwap = <Widget>[
-    CaixaAbertoTab(), //tab1
-    CaixaEncerradoTab() //tab2
-  ];
-
-
   @override
   void initState() {
     Session().caixaModel =
@@ -51,6 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
             body: _pagesSwap.elementAt(_indexTab),
             bottomNavigationBar: _bottomMenu(context)));
   }
+
+  List<Widget> _pagesSwap = <Widget>[
+    CaixaAbertoTab(), //tab1
+    CaixaEncerradoTab() //tab2
+  ];
 
   _changeTab(int index) {
     setState(() {

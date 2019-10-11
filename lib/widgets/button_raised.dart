@@ -13,7 +13,7 @@ class ButtomDefault extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: SizedBox(
-        height: 40.0,
+        height: 45.0,
         width: double.infinity,
         child: RaisedButton(
             textColor: Colors.white,

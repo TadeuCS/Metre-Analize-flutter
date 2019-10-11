@@ -14,7 +14,7 @@ class VendasPorSubGrupos extends StatefulWidget {
 }
 
 class _VendasPorSubGruposState extends State<VendasPorSubGrupos> {
-  int _limitResultados=5;
+  int _limitResultados = 5;
   int _maxLength;
 
   @override
@@ -47,16 +47,22 @@ class _VendasPorSubGruposState extends State<VendasPorSubGrupos> {
                     padding: const EdgeInsets.all(10),
                     child: Row(
                       children: <Widget>[
-                        Expanded(child: ButtonCircle("Top 5", ()=>_showTop(5)),),
-                        Expanded(child: ButtonCircle("Top 10", ()=>_showTop(10)),),
-                        Expanded(child: ButtonCircle("Top 15", ()=>_showTop(15)),),
-                        Expanded(child: ButtonCircle("Todos",()=> _showTop(10000)),),
+                        Expanded(
+                          child: ButtonCircle("Top 5", () => _showTop(5)),
+                        ),
+                        Expanded(
+                          child: ButtonCircle("Top 10", () => _showTop(10)),
+                        ),
+                        Expanded(
+                          child: ButtonCircle("Top 15", () => _showTop(15)),
+                        ),
+                        Expanded(
+                          child: ButtonCircle("Todos", () => _showTop(10000)),
+                        ),
                       ],
                     ),
                   ),
-                  CardItemHeader(
-                      tituloLeft: "Subgrupo",
-                      tituloRight: "Total"),
+                  CardItemHeader(tituloLeft: "Subgrupo", tituloRight: "Total"),
                   Divider(
                     color: Colors.grey,
                   ),
@@ -66,35 +72,43 @@ class _VendasPorSubGruposState extends State<VendasPorSubGrupos> {
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           print(snapshot.error);
-                          return Text(
-                              "Erro ao listar as Vendas por grupos");
+                          return Text("Erro ao listar as Vendas por grupos");
                         }
                         switch (snapshot.connectionState) {
                           case ConnectionState.done:
                             if (snapshot.hasData && snapshot.data.length > 0) {
-                              List<VendasPorSubGrupo> subGrupos =
-                                  snapshot.data;
-                              _maxLength=subGrupos.length;
+                              List<VendasPorSubGrupo> subGrupos = snapshot.data;
+                              _maxLength = subGrupos.length;
                               return Column(
                                 children: <Widget>[
                                   Column(
-                                    children: subGrupos.sublist(0, _limitResultados)
+                                    children: subGrupos
+                                        .sublist(
+                                            0,
+                                            _maxLength < _limitResultados
+                                                ? _maxLength
+                                                : _limitResultados)
                                         .map((subgrupo) => CardItemTotalizer(
-                                      descricao: subgrupo.descricao,
-                                      valor: subgrupo.total,
-                                      tipoColumnCenter: int,
-                                    )).toList(),
+                                              descricao: subgrupo.descricao,
+                                              valor: subgrupo.total,
+                                              tipoColumnCenter: int,
+                                            ))
+                                        .toList(),
                                   ),
                                   Divider(
                                     color: Colors.grey,
                                   ),
                                   CardItemTotalizer(
                                     descricao: "Total:",
-                                    valor: subGrupos.map((p)=>p.total).reduce((valorTotal, valor)=>valorTotal+valor),
-                                    decorationTitle:
-                                    TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
-                                    decorationValue:
-                                    TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
+                                    valor: subGrupos.map((p) => p.total).reduce(
+                                        (valorTotal, valor) =>
+                                            valorTotal + valor),
+                                    decorationTitle: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w600),
+                                    decorationValue: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w600),
                                   )
                                 ],
                               );
@@ -119,7 +133,8 @@ class _VendasPorSubGruposState extends State<VendasPorSubGrupos> {
 
   _showTop(int limitSelecionado) {
     setState(() {
-      _limitResultados = (limitSelecionado<_maxLength?limitSelecionado:_maxLength);
+      _limitResultados =
+          (limitSelecionado < _maxLength ? limitSelecionado : _maxLength);
     });
   }
 }

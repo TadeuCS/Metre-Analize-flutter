@@ -14,7 +14,7 @@ class VendasPorGrupos extends StatefulWidget {
 }
 
 class _VendasPorGruposState extends State<VendasPorGrupos> {
-  int _limitResultados=5;
+  int _limitResultados = 5;
   int _maxLength;
   @override
   Widget build(BuildContext context) {
@@ -43,19 +43,25 @@ class _VendasPorGruposState extends State<VendasPorGrupos> {
                     padding: const EdgeInsets.all(10),
                     child: Row(
                       children: <Widget>[
-                        Expanded(child: ButtonCircle("Top 5", ()=>_showTop(5)),),
-                        Expanded(child: ButtonCircle("Top 10", ()=>_showTop(10)),),
-                        Expanded(child: ButtonCircle("Top 15", ()=>_showTop(15)),),
-                        Expanded(child: ButtonCircle("Todos",()=> _showTop(10000)),),
+                        Expanded(
+                          child: ButtonCircle("Top 5", () => _showTop(5)),
+                        ),
+                        Expanded(
+                          child: ButtonCircle("Top 10", () => _showTop(10)),
+                        ),
+                        Expanded(
+                          child: ButtonCircle("Top 15", () => _showTop(15)),
+                        ),
+                        Expanded(
+                          child: ButtonCircle("Todos", () => _showTop(10000)),
+                        ),
                       ],
                     ),
                   ),
                   SizedBox(
                     height: 10.0,
                   ),
-                  CardItemHeader(
-                      tituloLeft: "Grupo",
-                      tituloRight: "Total"),
+                  CardItemHeader(tituloLeft: "Grupo", tituloRight: "Total"),
                   Divider(
                     color: Colors.grey,
                   ),
@@ -65,35 +71,41 @@ class _VendasPorGruposState extends State<VendasPorGrupos> {
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           print(snapshot.error);
-                          return Text(
-                              "Erro ao listar as Vendas por grupos");
+                          return Text("Erro ao listar as Vendas por grupos");
                         }
                         switch (snapshot.connectionState) {
                           case ConnectionState.done:
                             if (snapshot.hasData && snapshot.data.length > 0) {
-                              List<VendasPorGrupo> grupos =
-                                  snapshot.data;
-                              _maxLength=grupos.length;
+                              List<VendasPorGrupo> grupos = snapshot.data;
+                              _maxLength = grupos.length;
+                              print('Max: $_maxLength');
+                              print('Limit: $_limitResultados');
                               return Column(
                                 children: <Widget>[
                                   Column(
-                                    children: grupos.sublist(0,_limitResultados)
+                                    children: grupos
+                                        .sublist(0, _maxLength<_limitResultados?_maxLength:_limitResultados)
                                         .map((grupo) => CardItemTotalizer(
-                                      descricao: grupo.descricao,
-                                      valor: grupo.total,
-                                      tipoColumnCenter: int,
-                                    )).toList(),
+                                              descricao: grupo.descricao,
+                                              valor: grupo.total,
+                                              tipoColumnCenter: int,
+                                            ))
+                                        .toList(),
                                   ),
                                   Divider(
                                     color: Colors.grey,
                                   ),
                                   CardItemTotalizer(
                                     descricao: "Total:",
-                                    valor: grupos.map((p)=>p.total).reduce((valorTotal, valor)=>valorTotal+valor),
-                                    decorationTitle:
-                                    TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
-                                    decorationValue:
-                                    TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
+                                    valor: grupos.map((p) => p.total).reduce(
+                                        (valorTotal, valor) =>
+                                            valorTotal + valor),
+                                    decorationTitle: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w600),
+                                    decorationValue: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w600),
                                   )
                                 ],
                               );
@@ -118,7 +130,8 @@ class _VendasPorGruposState extends State<VendasPorGrupos> {
 
   _showTop(int limitSelecionado) {
     setState(() {
-      _limitResultados = (limitSelecionado<_maxLength?limitSelecionado:_maxLength);
+      _limitResultados =
+          (limitSelecionado < _maxLength ? limitSelecionado : _maxLength);
     });
   }
 }

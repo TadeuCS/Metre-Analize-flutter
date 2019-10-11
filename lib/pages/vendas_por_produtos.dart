@@ -9,14 +9,13 @@ import 'package:flutter_app/widgets/card_venda_liquida.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class VendasPorProdutos extends StatefulWidget {
-
   @override
   _VendasPorProdutosState createState() => _VendasPorProdutosState();
 }
 
 class _VendasPorProdutosState extends State<VendasPorProdutos> {
-  int _limitResultados=5;
-  int maxLength;
+  int _limitResultados = 5;
+  int _maxLength;
   @override
   Widget build(BuildContext context) {
     CaixaModel caixaModel = ScopedModel.of<CaixaModel>(context);
@@ -47,10 +46,17 @@ class _VendasPorProdutosState extends State<VendasPorProdutos> {
                     padding: const EdgeInsets.all(10),
                     child: Row(
                       children: <Widget>[
-                        Expanded(child: ButtonCircle("Top 5", ()=>_showTop(5)),),
-                        Expanded(child: ButtonCircle("Top 10", ()=>_showTop(10)),),
-                        Expanded(child: ButtonCircle("Top 15", ()=>_showTop(15)),),
-                        Expanded(child: ButtonCircle("Todos", ()=>_showTop(10000)))
+                        Expanded(
+                          child: ButtonCircle("Top 5", () => _showTop(5)),
+                        ),
+                        Expanded(
+                          child: ButtonCircle("Top 10", () => _showTop(10)),
+                        ),
+                        Expanded(
+                          child: ButtonCircle("Top 15", () => _showTop(15)),
+                        ),
+                        Expanded(
+                            child: ButtonCircle("Todos", () => _showTop(10000)))
                       ],
                     ),
                   ),
@@ -63,8 +69,7 @@ class _VendasPorProdutosState extends State<VendasPorProdutos> {
                   ),
                   FutureBuilder(
                       future: caixaModel.listTotalizadorPorProdutos(
-                          caixaModel.caixaSelecionado.idCaixa
-                      ),
+                          caixaModel.caixaSelecionado.idCaixa),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           print(snapshot.error);
@@ -74,11 +79,18 @@ class _VendasPorProdutosState extends State<VendasPorProdutos> {
                           case ConnectionState.done:
                             if (snapshot.hasData && snapshot.data.length > 0) {
                               List<VendasPorProduto> produtos = snapshot.data;
-                              maxLength=produtos.length;
+                              _maxLength = produtos.length;
+                              print('Max: $_maxLength');
+                              print('Limit: $_limitResultados');
                               return Column(
                                 children: <Widget>[
                                   Column(
-                                    children: produtos.sublist(0, _limitResultados)
+                                    children: produtos
+                                        .sublist(
+                                            0,
+                                            _maxLength < _limitResultados
+                                                ? _maxLength
+                                                : _limitResultados)
                                         .map((produto) => CardItemTotalizer(
                                               descricao: produto.descricao,
                                               valorCenter: produto.quantidade,
@@ -127,9 +139,11 @@ class _VendasPorProdutosState extends State<VendasPorProdutos> {
       ),
     );
   }
-  _showTop(int limitSelecionado) {
+
+  _showTop(int _limitSelecionado) {
     setState(() {
-      _limitResultados = (limitSelecionado<maxLength?limitSelecionado:maxLength);
+      _limitResultados =
+          (_limitSelecionado < _maxLength ? _limitSelecionado : _maxLength);
     });
   }
 }
