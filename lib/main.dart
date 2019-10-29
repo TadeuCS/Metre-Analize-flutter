@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/configuracao_screen.dart';
+import 'package:flutter_app/screens/detalhamento_caixa_screen.dart';
 import 'package:flutter_app/screens/home_screen.dart';
 import 'package:flutter_app/screens/login_screen.dart';
 import 'package:flutter_app/screens/passwordRecuver_screen.dart';
@@ -29,6 +30,7 @@ Map<String, WidgetBuilder> getRoutes() {
       '/recovery': (context) => RecuperarSenhaScreen(),
       '/configuracao': (context) => ConfiguracaoScreen(),
       '/home': (context) => HomeScreen(),
-      '/caixa': (context) => DetalhamentoCaixa(),
+      '/caixa': (context) => DetalhamentoCaixaEncerrado(),
+      '/vendaBruta': (context) => DetalhamentoVendaBruta(),
     };
 }

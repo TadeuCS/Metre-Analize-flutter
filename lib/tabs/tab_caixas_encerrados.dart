@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/model/CaixaModel.dart';
 import 'package:flutter_app/pojos/TotalizadorCaixa.dart';
 import 'package:flutter_app/util/OUtils.dart';
+import 'package:flutter_app/util/Session.dart';
 import 'package:flutter_app/widgets/card_item_header.dart';
+import 'package:flutter_app/widgets/card_item_totalizer.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CaixaEncerradoTab extends StatelessWidget {
@@ -27,7 +29,7 @@ class CaixaEncerradoTab extends StatelessWidget {
                       return _listTileCaixaEncerrado(caixa, model, context);
                     });
               }
-              return Text("Lista Vazia");
+              return Container();
             case ConnectionState.none:
               return Text("Erro de Conexão!");
             default:
@@ -44,7 +46,7 @@ class CaixaEncerradoTab extends StatelessWidget {
       TotalizadorCaixa caixa, CaixaModel model, BuildContext context) {
     return Card(
       elevation: 2,
-      child: ListTile(        
+      child: ListTile(
         dense: true,
         title: Wrap(
           children: <Widget>[
@@ -56,13 +58,31 @@ class CaixaEncerradoTab extends StatelessWidget {
                   TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
             ),
             CardItemHeader(
-              tituloLeft: caixa.turno,
-              tituloRight: caixa.operador,
+              decoration:
+                  TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+              tituloLeft: caixa.operador,
+              tituloRight: caixa.turno,
             ),
+            Divider(
+              color: Colors.grey,
+            ),
+            CardItemTotalizer(
+              descricao: "Saldo:",
+              valor: caixa.saldo,
+              decorationTitle: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).primaryColor),
+              decorationValue: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).primaryColor),
+            )
           ],
         ),
         onTap: () {
           model.caixaSelecionado = caixa;
+          Session().caixaModel = model;
           Navigator.pushNamed(context, '/caixa');
         },
       ),

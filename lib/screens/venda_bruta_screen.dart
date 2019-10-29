@@ -9,12 +9,12 @@ import 'package:flutter_app/pages/vendas_por_subgrupos.dart';
 import 'package:flutter_app/util/Session.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class DetalhamentoCaixa extends StatefulWidget {
+class DetalhamentoVendaBruta extends StatefulWidget {
   @override
-  _DetalhamentoCaixaState createState() => _DetalhamentoCaixaState();
+  _DetalhamentoVendaBrutaState createState() => _DetalhamentoVendaBrutaState();
 }
 
-class _DetalhamentoCaixaState extends State<DetalhamentoCaixa> {
+class _DetalhamentoVendaBrutaState extends State<DetalhamentoVendaBruta> {
   final _pageController = PageController(initialPage: 0, keepPage: true);
   int currentPage;
 
@@ -31,7 +31,7 @@ class _DetalhamentoCaixaState extends State<DetalhamentoCaixa> {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text("Detalhamento do Caixa"),
+          title: Text("Venda Bruta"),
         ),
         body: ScopedModel<CaixaModel>(
           model: Session().caixaModel,
