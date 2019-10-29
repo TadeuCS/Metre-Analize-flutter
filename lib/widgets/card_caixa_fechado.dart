@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/pojos/TotalizadorCaixa.dart';
 import 'package:flutter_app/pojos/TotalizadorForma.dart';
 import 'package:flutter_app/util/OUtils.dart';
-import 'package:flutter_app/widgets/button_raised.dart';
 import 'package:flutter_app/widgets/card_item_header.dart';
 import 'package:flutter_app/widgets/card_item_totalizer.dart';
 
@@ -13,9 +12,9 @@ class CardCaixaFechado extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _detalharVendaBruta() {
-      Navigator.pushNamed(context, "/vendaBruta");
-    }
+    // _detalharVendaBruta() {
+    //   Navigator.pushNamed(context, "/vendaBruta");
+    // }
 
     List<TotalizadorForma> totalizadoresPorForma =
         caixa.totalizadores.where((tot) => tot.calculado > 0).toList();

@@ -28,7 +28,7 @@ class CaixaAbertoTab extends StatelessWidget {
                             return CardCaixaAberto(snapshot.data[index]);
                           });
                     }
-                    return Text("Lista Vazia");
+                    return Container();
                   case ConnectionState.none:
                     return Text("Erro de Conexão!");
                   default:
