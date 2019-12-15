@@ -1,0 +1,41 @@
+PODS:
+  - Flutter (1.0.0)
+  - OneSignal (2.10.1)
+  - onesignal_flutter (2.0.2):
+    - Flutter
+    - OneSignal (= 2.10.1)
+  - qrcode_reader (0.0.1):
+    - Flutter
+  - shared_preferences (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - onesignal_flutter (from `.symlinks/plugins/onesignal_flutter/ios`)
+  - qrcode_reader (from `.symlinks/plugins/qrcode_reader/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+
+SPEC REPOS:
+  trunk:
+    - OneSignal
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  onesignal_flutter:
+    :path: ".symlinks/plugins/onesignal_flutter/ios"
+  qrcode_reader:
+    :path: ".symlinks/plugins/qrcode_reader/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  OneSignal: 8fb749fa07f88006403c9b659a570fb7fb74519a
+  onesignal_flutter: f0eab25765dd95978c19dc64a87a8a33387909fa
+  qrcode_reader: 09b34d43b4c08fe5b63a6e56c96789bcea7b9148
+  shared_preferences: 1feebfa37bb57264736e16865e7ffae7fc99b523
+
+PODFILE CHECKSUM: 3dbe063e9c90a5d7c9e4e76e70a821b9e2c1d271
+
+COCOAPODS: 1.8.4
