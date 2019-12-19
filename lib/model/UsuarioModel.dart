@@ -14,7 +14,7 @@ class UsuarioModel extends Model {
 
   //faz login e retorna a key de autenticação da API
   Future<bool> login(String usuario, String senha) async {
-    var url = '${Session().apiUrl}usuario/login/?user=$usuario&pass=$senha';
+    var url = '${Session().apiUrl}usuario/login/?user=${usuario.trim()}&pass=${senha.trim()}';
     print("url: $url");
     return await http.get(url).then((response) {
       print(response.statusCode);
