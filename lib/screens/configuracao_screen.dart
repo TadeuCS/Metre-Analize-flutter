@@ -13,9 +13,9 @@ class _ConfiguracaoScreenState extends State<ConfiguracaoScreen> {
   @override
   void initState() {
     super.initState();
-    try{
-      _urlApi.text=Session().prefs.get("urlApi");
-    }catch(e){
+    try {
+      _urlApi.text = Session().prefs.get("urlApi");
+    } catch (e) {
       e.toString();
     }
   }
@@ -26,6 +26,17 @@ class _ConfiguracaoScreenState extends State<ConfiguracaoScreen> {
       appBar: AppBar(
         title: Text("Configuração"),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () {
+              setState(() {
+                Session().prefs.setString("urlApi", _urlApi.text);
+                Navigator.pushReplacementNamed(context, "/");
+              });
+            },
+          )
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(8),
@@ -60,34 +71,23 @@ class _ConfiguracaoScreenState extends State<ConfiguracaoScreen> {
           ],
         ),
       ),
-      floatingActionButton:
-      _urlApi.text.trim().isEmpty? Container():
-      FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          child: Icon(Icons.check),
-          onPressed: () {
-            setState(() {
-              Session().prefs.setString("urlApi", _urlApi.text);
-              Navigator.pushReplacementNamed(context, "/");
-            });
-          }),
     );
   }
 
   Future scan() async {
-       await QRCodeReader()
-          .setAutoFocusIntervalInMs(200) // default 5000
-          .setForceAutoFocus(true) // default false
-          .setTorchEnabled(true) // default false
-          .setHandlePermissions(true) // default true
-          .setExecuteAfterPermissionGranted(true) // default true
-          .scan()
-          .then((text){
-         text = text.replaceAll("/services/analize/", "");
-         text = (!text.startsWith("http://") && !text.startsWith("https://")
-             ? 'http://$text/services/analize/'
-             : '$text/services/analize/');
-         _urlApi.text = text;
-       });
+    await QRCodeReader()
+        .setAutoFocusIntervalInMs(200) // default 5000
+        .setForceAutoFocus(true) // default false
+        .setTorchEnabled(true) // default false
+        .setHandlePermissions(true) // default true
+        .setExecuteAfterPermissionGranted(true) // default true
+        .scan()
+        .then((text) {
+      text = text.replaceAll("/services/analize/", "");
+      text = (!text.startsWith("http://") && !text.startsWith("https://")
+          ? 'http://$text/services/analize/'
+          : '$text/services/analize/');
+      _urlApi.text = text;
+    });
   }
 }
